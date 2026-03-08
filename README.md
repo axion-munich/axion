@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# axion Munich Website
 
-## Getting Started
+Next.js rebuild of the axion Munich landing page and student application flow.
 
-First, run the development server:
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Application storage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Student applications are stored in:
 
-## Learn More
+- Google Sheets for answers
+- Google Drive for CV files
 
-To learn more about Next.js, take a look at the following resources:
+The backend route is [route.ts](/Users/shohzodsobirov/Desktop/axion-codex/src/app/api/apply/route.ts).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Storage modes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Recommended for personal Google accounts
 
-## Deploy on Vercel
+Use `GOOGLE_APPS_SCRIPT_URL`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Reason: service accounts cannot upload files into a normal personal Google Drive folder because they do not have their own Drive storage quota. Apps Script runs as your Google account, so it can create the file in your Drive folder and append the row to your sheet.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Setup guide:
+- [Apps Script guide](/Users/shohzodsobirov/Desktop/axion-codex/docs/google-apps-script/README.md)
+- [Apps Script code](/Users/shohzodsobirov/Desktop/axion-codex/docs/google-apps-script/Code.gs)
+
+### Only for Google Workspace / Shared Drive setups
+
+Use:
+- `GOOGLE_CLIENT_EMAIL`
+- `GOOGLE_PRIVATE_KEY`
+- `GOOGLE_SHEET_ID`
+- `GOOGLE_DRIVE_FOLDER_ID`
+
+This mode is valid when uploads go into a Shared Drive or another setup where the service account can create files.
+
+## Required environment variables
+
+Create `.env` or `.env.local` using [.env.example](/Users/shohzodsobirov/Desktop/axion-codex/.env.example).
+
+### Admin
+
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+
+### Apps Script mode
+
+- `GOOGLE_APPS_SCRIPT_URL`
+
+### Service account mode
+
+- `GOOGLE_CLIENT_EMAIL`
+- `GOOGLE_PRIVATE_KEY`
+- `GOOGLE_SHEET_ID`
+- `GOOGLE_DRIVE_FOLDER_ID`
+
+If `GOOGLE_APPS_SCRIPT_URL` is set, the app uses Apps Script first.
+
+## Row mapping
+
+Each submission appends one row in this shape:
+
+`name, surname, university, email, cv, question_1, question_2, question_3, question_4, question_5, Checkbox, referer, formid, sent, requestid`
+
+Current mapping:
+
+- `name` -> first word from full name
+- `surname` -> remaining words from full name
+- `university` -> university
+- `email` -> email
+- `cv` -> Google Drive file link
+- `question_1` -> study program / degree
+- `question_2` -> previous internships / work / projects
+- `question_3` -> achievement / impact story
+- `question_4` -> motivation + preferred track
+- `question_5` -> strengths / perspective brought to axion
+- `Checkbox` -> `yes`
+- `referer` -> request referer
+- `formid` -> `axion-next-apply`
+- `sent` -> Europe/Berlin timestamp
+- `requestid` -> generated UUID
+
+Headers are added automatically on the first row if they are missing:
+
+`Vorname, Nachname, Universitaet, E-Mail, CV Link, Studiengang, Erfahrung / Projekte, Impact Story, Motivation / Track, Staerken, Consent, Referer, Form ID, Submitted At, Request ID`
+
+## Notes
+
+- Max CV size is 5MB.
+- Accepted file types: PDF, DOC, DOCX.
+- In Apps Script mode, the script sets the uploaded CV to `Anyone with the link -> Viewer` so the sheet stores a usable URL.
+- If you change [docs/google-apps-script/Code.gs](/Users/shohzodsobirov/Desktop/axion-codex/docs/google-apps-script/Code.gs), update the Apps Script project and redeploy the web app so the live script uses the latest version.
+- `/admin` uses a file-backed store at `content/site-cms.json`. This is suitable for a persistent server or VPS. It will not persist reliably on ephemeral serverless filesystems.
