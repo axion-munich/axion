@@ -22,6 +22,15 @@ type AddTeamMemberInput = {
   expertise?: string[];
 };
 
+type UpdateTeamMemberInput = {
+  id: string;
+  name: string;
+  role: string;
+  bio?: string;
+  expertise?: string[];
+  image?: string;
+};
+
 const CMS_DIRECTORY = path.join(process.cwd(), "content");
 const CMS_FILE_PATH = path.join(CMS_DIRECTORY, "site-cms.json");
 
@@ -111,6 +120,55 @@ export async function addTeamMember(input: AddTeamMemberInput) {
   const next: SiteCms = {
     ...current,
     teamMembers: [...current.teamMembers, member],
+    updatedAt: new Date().toISOString(),
+  };
+
+  await saveSiteCms(next);
+  return next;
+}
+
+export async function removeTeamMember(memberId: string) {
+  const current = await getSiteCms();
+  const nextMembers = current.teamMembers.filter((member) => member.id !== memberId);
+
+  if (nextMembers.length === current.teamMembers.length) {
+    throw new Error("Team member not found.");
+  }
+
+  const next: SiteCms = {
+    ...current,
+    teamMembers: nextMembers,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await saveSiteCms(next);
+  return next;
+}
+
+export async function updateTeamMember(input: UpdateTeamMemberInput) {
+  const current = await getSiteCms();
+  const memberIndex = current.teamMembers.findIndex((member) => member.id === input.id);
+
+  if (memberIndex === -1) {
+    throw new Error("Team member not found.");
+  }
+
+  const existingMember = current.teamMembers[memberIndex];
+  const updatedMember: EditableTeamMember = {
+    ...existingMember,
+    name: input.name.trim(),
+    role: input.role.trim(),
+    bio: input.bio?.trim() || "",
+    expertise: (input.expertise || []).map((item) => item.trim()).filter(Boolean),
+    image: input.image?.trim() || existingMember.image,
+  };
+
+  const nextMembers = [...current.teamMembers];
+  nextMembers[memberIndex] = updatedMember;
+
+  const next: SiteCms = {
+    ...current,
+    teamMembers: nextMembers,
     updatedAt: new Date().toISOString(),
   };
 

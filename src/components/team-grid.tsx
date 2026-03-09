@@ -48,7 +48,7 @@ export function TeamGrid({ members }: TeamGridProps) {
                     <img
                       src={member.image}
                       alt={member.name}
-                      className="h-full w-full object-contain object-center transition duration-500 group-hover:scale-[1.02]"
+                      className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.02]"
                       loading="lazy"
                     />
                   </div>

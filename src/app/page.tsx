@@ -7,6 +7,7 @@ import {
   Phone,
   Sparkles,
 } from "lucide-react";
+import Link from "next/link";
 
 import { MobileNav } from "@/components/mobile-nav";
 import { TeamGrid } from "@/components/team-grid";
@@ -77,46 +78,48 @@ export default async function Home() {
 
   return (
     <div id="top" className="relative min-h-screen overflow-x-clip">
-      <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-xl">
-        <div className="axion-container flex h-16 items-center justify-between">
-          <a href="#top" className="axion-title text-lg text-primary">
-            axion
-          </a>
+      <header className="relative z-40 px-4 pt-5">
+        <div className="axion-container">
+          <div className="flex min-h-[4.5rem] items-center justify-between rounded-[1.75rem] border border-white/30 bg-white/58 px-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.55)] backdrop-blur-2xl dark:border-white/10 dark:bg-[#0b1020]/62 sm:px-6">
+            <a href="#top" className="axion-title text-lg text-primary">
+              axion
+            </a>
 
-          <nav className="hidden items-center gap-1 md:flex">
-            {navLinks.map((link) => (
-              <a
-                key={link.id}
-                href={`#${link.id}`}
-                className="rounded-md px-3 py-2 text-sm text-muted-foreground transition hover:bg-accent hover:text-foreground"
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
+            <nav className="hidden items-center gap-1 md:flex">
+              {navLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  className="rounded-full px-4 py-2 text-sm text-muted-foreground transition hover:bg-white/55 hover:text-foreground dark:hover:bg-white/8"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:block">
-              <ThemeToggle />
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:block">
+                <ThemeToggle />
+              </div>
+              {applicationsOpen ? (
+                <Button
+                  asChild
+                  className="hidden rounded-full bg-primary px-4 text-primary-foreground hover:bg-primary/90 md:inline-flex"
+                  size="sm"
+                >
+                  <a href="/apply">Apply Now</a>
+                </Button>
+              ) : (
+                <Button
+                  disabled
+                  className="hidden rounded-full bg-muted px-4 text-muted-foreground md:inline-flex"
+                  size="sm"
+                >
+                  Applications Closed
+                </Button>
+              )}
+              <MobileNav applicationsOpen={applicationsOpen} links={navLinks} />
             </div>
-            {applicationsOpen ? (
-              <Button
-                asChild
-                className="hidden rounded-full bg-primary px-4 text-primary-foreground hover:bg-primary/90 md:inline-flex"
-                size="sm"
-              >
-                <a href="/apply">Apply Now</a>
-              </Button>
-            ) : (
-              <Button
-                disabled
-                className="hidden rounded-full bg-muted px-4 text-muted-foreground md:inline-flex"
-                size="sm"
-              >
-                Applications Closed
-              </Button>
-            )}
-            <MobileNav applicationsOpen={applicationsOpen} links={navLinks} />
           </div>
         </div>
       </header>
@@ -385,8 +388,6 @@ export default async function Home() {
             </CardHeader>
 
             <CardContent className="space-y-6">
-              <p className="text-sm leading-7 text-muted-foreground">{contact.line}</p>
-
               <div className="grid gap-3 md:grid-cols-2">
                 <a
                   href={`mailto:${contact.email}`}
@@ -440,6 +441,22 @@ export default async function Home() {
           </Card>
         </section>
       </main>
+
+      <footer className="pb-8 pt-2">
+        <div className="axion-container">
+          <div className="flex flex-col gap-4 rounded-[1.75rem] border border-white/22 bg-white/36 px-5 py-5 text-sm text-muted-foreground shadow-[0_20px_60px_-42px_rgba(15,23,42,0.4)] backdrop-blur-xl dark:border-white/10 dark:bg-white/4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <p>© 2026 axion. All rights reserved.</p>
+            <div className="flex items-center gap-5">
+              <Link href="/privacy" className="transition hover:text-foreground">
+                Privacy
+              </Link>
+              <Link href="/terms" className="transition hover:text-foreground">
+                Terms
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

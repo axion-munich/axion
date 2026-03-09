@@ -27,7 +27,7 @@ export function MobileNav({ applicationsOpen, links }: MobileNavProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden rounded-full border border-border bg-card/70 text-foreground hover:bg-accent"
+          className="md:hidden rounded-full border border-white/20 bg-white/10 text-foreground shadow-[0_12px_40px_-24px_rgba(15,23,42,0.65)] backdrop-blur-xl hover:bg-white/16 dark:border-white/10 dark:bg-white/5"
           aria-label="Open menu"
         >
           <Menu className="size-5" />

@@ -34,8 +34,6 @@ export const navLinks: NavLink[] = [
   { id: "about", label: "Mission" },
   { id: "students", label: "Students" },
   { id: "start-ups", label: "Start–Ups" },
-  { id: "faq", label: "FAQ" },
-  { id: "contacts", label: "Contacts" },
 ];
 
 export const hero = {
