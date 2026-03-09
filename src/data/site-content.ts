@@ -38,7 +38,7 @@ export const navLinks: NavLink[] = [
 
 export const hero = {
   kicker: "Based in Munich",
-  title: "Gain Hands-On Experience in Consulting —",
+  title: "Student consult, founders scale, investors discover",
   subtitle:
     "axion is a Munich-based, student-driven consulting club where students from Germany’s top universities tackle real start-up challenges. We provide tailored support in strategy and operational consulting, focusing on areas such as market entry, organizational development, financial management, and fundraising preparation. Our interdisciplinary teams of students leverage diverse academic backgrounds to deliver actionable solutions for client start-ups. Beyond consulting, we serve as a bridge to Europe’s venture capital ecosystem. We prepare start-ups for fundraising and connect them with leading VCs, business angels, and innovation networks.",
   ctaPrimary: { label: "For Students", href: "#students" },
