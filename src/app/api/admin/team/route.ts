@@ -1,12 +1,12 @@
+import { Readable } from "node:stream";
+
+import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
-import { extname, join } from "node:path";
-import { mkdir, writeFile } from "node:fs/promises";
 import sharp from "sharp";
 
 import { isAdminRequestAuthenticated } from "@/lib/admin-auth";
 import { addTeamMember, removeTeamMember, updateTeamMember } from "@/lib/site-cms";
 
-const TEAM_UPLOADS_DIRECTORY = join(process.cwd(), "public", "uploads", "team");
 const MAX_IMAGE_SIZE_BYTES = 8 * 1024 * 1024;
 const OUTPUT_WIDTH = 960;
 const OUTPUT_HEIGHT = 1280;
@@ -19,19 +19,11 @@ function slugify(value: string) {
     .slice(0, 48);
 }
 
-async function storeTeamImage(file: File, memberName: string) {
-  const originalExtension = extname(file.name || "").toLowerCase();
-  const fallbackExtension =
-    file.type === "image/png"
-      ? ".png"
-      : file.type === "image/webp"
-        ? ".webp"
-        : file.type === "image/avif"
-          ? ".avif"
-          : ".jpg";
-  const extension = originalExtension || fallbackExtension;
+async function uploadTeamImage(file: File, memberName: string): Promise<string> {
+  const ext = (file.name || "").split(".").pop()?.toLowerCase() || "";
+  const allowed = ["png", "jpg", "jpeg", "webp", "avif"];
 
-  if (![".png", ".jpg", ".jpeg", ".webp", ".avif"].includes(extension)) {
+  if (ext && !allowed.includes(ext)) {
     throw new Error("Please upload a PNG, JPG, JPEG, WEBP, or AVIF image.");
   }
 
@@ -39,10 +31,8 @@ async function storeTeamImage(file: File, memberName: string) {
     throw new Error("Please upload an image up to 8MB.");
   }
 
-  const fileName = `${slugify(memberName) || "team-member"}-${Date.now()}.webp`;
-  const filePath = join(TEAM_UPLOADS_DIRECTORY, fileName);
   const fileBuffer = Buffer.from(await file.arrayBuffer());
-  const normalizedBuffer = await sharp(fileBuffer)
+  const processedBuffer = await sharp(fileBuffer)
     .rotate()
     .resize(OUTPUT_WIDTH, OUTPUT_HEIGHT, {
       fit: "cover",
@@ -52,10 +42,49 @@ async function storeTeamImage(file: File, memberName: string) {
     .webp({ quality: 88 })
     .toBuffer();
 
-  await mkdir(TEAM_UPLOADS_DIRECTORY, { recursive: true });
-  await writeFile(filePath, normalizedBuffer);
+  const email = process.env.GOOGLE_CLIENT_EMAIL;
+  const key = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
-  return `/uploads/team/${fileName}`;
+  if (!email || !key) {
+    throw new Error("Google credentials are not configured.");
+  }
+
+  const auth = new google.auth.JWT({
+    email,
+    key,
+    scopes: ["https://www.googleapis.com/auth/drive"],
+  });
+
+  const drive = google.drive({ version: "v3", auth });
+  const fileName = `${slugify(memberName) || "team-member"}-${Date.now()}.webp`;
+
+  const created = await drive.files.create({
+    requestBody: {
+      name: fileName,
+      parents: folderId ? [folderId] : undefined,
+    },
+    media: {
+      mimeType: "image/webp",
+      body: Readable.from(processedBuffer),
+    },
+    fields: "id",
+    supportsAllDrives: true,
+  });
+
+  const fileId = created.data.id;
+
+  if (!fileId) {
+    throw new Error("Image upload to Google Drive failed.");
+  }
+
+  await drive.permissions.create({
+    fileId,
+    requestBody: { role: "reader", type: "anyone" },
+    supportsAllDrives: true,
+  });
+
+  return `https://drive.google.com/uc?export=view&id=${fileId}`;
 }
 
 export async function POST(request: NextRequest) {
@@ -66,8 +95,6 @@ export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const name = formData.get("name");
   const role = formData.get("role");
-  const bio = formData.get("bio");
-  const expertise = formData.get("expertise");
   const image = formData.get("image");
 
   if (
@@ -84,14 +111,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const imagePath = await storeTeamImage(image, name);
+  const imagePath = await uploadTeamImage(image, name);
 
   const next = await addTeamMember({
     name,
     role,
     image: imagePath,
-    bio: typeof bio === "string" ? bio : "",
-    expertise: typeof expertise === "string" ? expertise.split(",") : [],
   });
 
   return NextResponse.json({ ok: true, teamMembers: next.teamMembers });
@@ -121,8 +146,6 @@ export async function PATCH(request: NextRequest) {
   const id = formData.get("id");
   const name = formData.get("name");
   const role = formData.get("role");
-  const bio = formData.get("bio");
-  const expertise = formData.get("expertise");
   const image = formData.get("image");
 
   if (
@@ -142,7 +165,7 @@ export async function PATCH(request: NextRequest) {
   let imagePath: string | undefined;
 
   if (image instanceof File && image.size > 0) {
-    imagePath = await storeTeamImage(image, name);
+    imagePath = await uploadTeamImage(image, name);
   }
 
   const next = await updateTeamMember({
@@ -150,8 +173,6 @@ export async function PATCH(request: NextRequest) {
     name,
     role,
     image: imagePath,
-    bio: typeof bio === "string" ? bio : "",
-    expertise: typeof expertise === "string" ? expertise.split(",") : [],
   });
 
   return NextResponse.json({ ok: true, teamMembers: next.teamMembers });

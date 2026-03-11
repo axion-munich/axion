@@ -36,8 +36,6 @@ export function AdminDashboard({
   const [form, setForm] = useState({
     name: "",
     role: "",
-    bio: "",
-    expertise: "",
   });
 
   function showToast(tone: AdminToast["tone"], title: string) {
@@ -54,8 +52,6 @@ export function AdminDashboard({
     setForm({
       name: "",
       role: "",
-      bio: "",
-      expertise: "",
     });
     setImageFile(null);
     setFileInputKey((current) => current + 1);
@@ -109,8 +105,6 @@ export function AdminDashboard({
       }
       payload.append("name", form.name);
       payload.append("role", form.role);
-      payload.append("bio", form.bio);
-      payload.append("expertise", form.expertise);
       if (imageFile) {
         payload.append("image", imageFile);
       }
@@ -192,8 +186,6 @@ export function AdminDashboard({
     setForm({
       name: member.name,
       role: member.role,
-      bio: member.bio,
-      expertise: member.expertise.join(", "),
     });
     setImageFile(null);
     setFileInputKey((current) => current + 1);
@@ -356,37 +348,6 @@ export function AdminDashboard({
                 {imageFile ? (
                   <p className="text-xs text-muted-foreground">Selected file: {imageFile.name}</p>
                 ) : null}
-              </div>
-
-              <div className="grid gap-2">
-                <label htmlFor="bio" className="text-sm font-medium text-foreground">
-                  Bio (optional)
-                </label>
-                <textarea
-                  id="bio"
-                  rows={4}
-                  value={form.bio}
-                  onChange={(event) =>
-                    setForm((current) => ({ ...current, bio: event.target.value }))
-                  }
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:ring-2 focus:ring-primary/35"
-                  placeholder="Short background for the dialog"
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <label htmlFor="expertise" className="text-sm font-medium text-foreground">
-                  Expertise (optional)
-                </label>
-                <input
-                  id="expertise"
-                  value={form.expertise}
-                  onChange={(event) =>
-                    setForm((current) => ({ ...current, expertise: event.target.value }))
-                  }
-                  className="h-11 rounded-lg border border-border bg-background px-3 text-sm outline-none transition focus:ring-2 focus:ring-primary/35"
-                  placeholder="Comma separated, e.g. Strategy, Finance, Operations"
-                />
               </div>
 
               <Button

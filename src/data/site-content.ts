@@ -25,8 +25,6 @@ export type FaqItem = {
 export type TeamMember = {
   name: string;
   role: string;
-  bio: string;
-  expertise: string[];
   image: string;
 };
 
@@ -196,71 +194,31 @@ export const teamMembers: TeamMember[] = [
     name: "Fedor Olshevskiy",
     role: "Founder",
     image: "https://thb.tildacdn.net/tild6236-3563-4532-b932-376230656335/image1.jpg",
-    bio: "Fedor is an undergradute Business Management student at LMU Munich. With a background in Finance, Accounting and Stastistics, he is responsible for internal banking, organization and management at Axion.",
-    expertise: [
-      "Data Analysis & Visualization",
-      "Project Management",
-      "UI / Web Design",
-      "MS Office",
-    ],
   },
   {
     name: "Matvei Bobreshov",
     role: "Founder",
     image: "https://thb.tildacdn.net/tild6466-3263-4134-b132-613639636436/image2.jpg",
-    bio: "Matvei is a graduate Business Management and Technology student at TUM, specializing in Finance and Informatics. With extensive experience across private equity, investor relations, consulting, and corporate finance, he supports clients and teams at Axion in delivering clear, data-driven solutions to financial and operational challenges. He has worked with leading organizations including MEAG, Golding Capital Partners, Deloitte, UniCredit, Wacker Neuson, and Knorr-Bremse.",
-    expertise: [
-      "Financial Modelling",
-      "Data Analysis & Visualization",
-      "Power BI",
-      "MS Office",
-    ],
   },
   {
     name: "Andrey Mikhaylenko",
     role: "Founder",
     image: "https://thb.tildacdn.net/tild6661-3736-4839-a262-646262353361/image3.jpg",
-    bio: "Andrey is an undergraduate Economics student at LMU Munich with a background in finance built through internships and project work in financial audit, alternative investment management, and strategy consulting. As Co Head of the Consulting Department at Axion, he is responsible for sourcing and assessing new projects, overseeing project teams, and ensuring that every engagement delivers measurable strategic value for partner organizations, as well as a strong development opportunity for students.",
-    expertise: [
-      "Strategy Consulting",
-      "Market Research",
-      "MS Office",
-      "VBA",
-      "Power Apps",
-    ],
   },
   {
     name: "Alexandr Kuprienko",
     role: "Founder",
     image: "https://thb.tildacdn.net/tild3238-6532-4935-b261-313663363761/image4.jpg",
-    bio: "Aleksandr is a graduate student in Computational Mechanics and Business Informatics at TUM, with a background in Civil Engineering and experience in project management and consulting. He focuses on strategy and market analysis, as well as overseeing external relations and project development at Axion.",
-    expertise: [
-      "Strategy Consulting",
-      "Market Research",
-      "Data Analysis",
-      "Project Management",
-      "MS Office",
-    ],
   },
   {
     name: "Paul Müller",
     role: "Board Member",
     image: "https://thb.tildacdn.net/tild3239-6265-4261-a464-633934626434/image5.jpg",
-    bio: "Paul is an undergraduate Business Administration student at LMU Munich, specialising in Accounting and Finance. He is responsible for Strategy at Axion.",
-    expertise: ["Strategy", "Market Research", "MS Office"],
   },
   {
     name: "Kirill Khvastov",
     role: "Board Member",
     image: "https://thb.tildacdn.net/tild3133-6533-4637-b535-336466626635/image6.jpg",
-    bio: "Kirill is a graduate student in Mathematics at TUM. He has gained strategy and analytical experience through roles at Stern Stewart & Co., Munich Re, and Golding Capital Partners. Additionally, he held leadership and consulting positions at AIESEC and 180 Degrees Consulting. He currently leads a client engagement and supports the club's growth.",
-    expertise: [
-      "Machine Learning",
-      "Strategy Consulting",
-      "Data Analytics",
-      "Project Management",
-      "Marketing",
-    ],
   },
 ];
 
