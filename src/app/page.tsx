@@ -447,11 +447,11 @@ export default async function Home() {
           <div className="flex flex-col gap-4 rounded-[1.75rem] border border-white/22 bg-white/36 px-5 py-5 text-sm text-muted-foreground shadow-[0_20px_60px_-42px_rgba(15,23,42,0.4)] backdrop-blur-xl dark:border-white/10 dark:bg-white/4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <p>© 2026 axion. All rights reserved.</p>
             <div className="flex items-center gap-5">
+              <Link href="/imprint" className="transition hover:text-foreground">
+                Imprint
+              </Link>
               <Link href="/privacy" className="transition hover:text-foreground">
                 Privacy
-              </Link>
-              <Link href="/terms" className="transition hover:text-foreground">
-                Terms
               </Link>
             </div>
           </div>
