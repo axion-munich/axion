@@ -24,16 +24,16 @@ export function StudentTabs({
   return (
     <div className="space-y-10">
       <div className="rounded-2xl border border-border bg-card/60 p-4 dark:bg-[#0c1020]/50 sm:p-6">
-        <Tabs defaultValue={highlights[0]?.title}>
+        <Tabs defaultValue={tracks[0]?.name || highlights[0]?.title}>
           <TabsList className="h-auto w-full flex-wrap justify-center gap-1 overflow-x-auto bg-muted/50 p-1 dark:bg-white/5">
-            {highlights.map((h) => (
-              <TabsTrigger key={h.title} value={h.title} className="text-xs sm:text-sm">
-                {h.title}
-              </TabsTrigger>
-            ))}
             {tracks.map((t) => (
               <TabsTrigger key={t.name} value={t.name} className="text-xs sm:text-sm">
                 {t.name}
+              </TabsTrigger>
+            ))}
+            {highlights.map((h) => (
+              <TabsTrigger key={h.title} value={h.title} className="text-xs sm:text-sm">
+                {h.title}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -98,12 +98,13 @@ export function StudentTabs({
         {applicationsOpen ? (
           <Button
             asChild
-            className="rounded-full bg-primary px-6 text-primary-foreground hover:bg-primary/90"
+            size="lg"
+            className="rounded-full bg-primary px-10 py-6 text-lg font-semibold text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90"
           >
             <a href="/apply">Apply now</a>
           </Button>
         ) : (
-          <Button disabled className="rounded-full bg-muted px-6 text-muted-foreground">
+          <Button disabled size="lg" className="rounded-full bg-muted px-10 py-6 text-lg font-semibold text-muted-foreground">
             Applications closed
           </Button>
         )}

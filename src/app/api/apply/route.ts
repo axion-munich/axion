@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { Readable } from "node:stream";
 
 import { google } from "googleapis";
@@ -25,8 +24,6 @@ type RequiredField = (typeof REQUIRED_TEXT_FIELDS)[number];
 type SubmissionValues = Record<RequiredField, string>;
 
 type SubmissionContext = {
-  referer: string;
-  requestId: string;
   sent: string;
 };
 
@@ -47,10 +44,7 @@ const SHEET_HEADERS = [
   "Leadership",
   "Business Idea",
   "Consent",
-  "Referer",
-  "Form ID",
   "Submitted At",
-  "Request ID",
 ] as const;
 
 function getRequiredText(
@@ -67,12 +61,10 @@ function getRequiredText(
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
-function createSubmissionContext(request: Request): SubmissionContext {
+function createSubmissionContext(): SubmissionContext {
   const submittedAt = new Date();
 
   return {
-    referer: request.headers.get("referer") || "https://axion-munich.de/apply",
-    requestId: randomUUID(),
     sent: new Intl.DateTimeFormat("sv-SE", {
       dateStyle: "short",
       timeStyle: "medium",
@@ -98,10 +90,7 @@ function buildSheetRow(values: SubmissionValues, cvUrl: string, context: Submiss
     values.leadership,
     values.businessIdea,
     "yes",
-    context.referer,
-    "axion-next-apply",
     context.sent,
-    context.requestId,
   ];
 }
 
@@ -127,7 +116,7 @@ async function ensureSheetHeaders(params: {
     throw new Error("Could not resolve the target Google Sheet tab.");
   }
 
-  const headerRange = `${sheetTitle}!A1:N1`;
+  const headerRange = `${sheetTitle}!A1:K1`;
   const existing = await sheets.spreadsheets.values.get({
     spreadsheetId,
     range: headerRange,
@@ -240,7 +229,7 @@ async function submitViaGoogleApis(params: {
   const googleClientEmail = process.env.GOOGLE_CLIENT_EMAIL;
   const googlePrivateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
   const googleSheetId = process.env.GOOGLE_SHEET_ID;
-  const googleDriveFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+  const googleDriveFolderId = process.env.GOOGLE_CV_FOLDER_ID;
 
   if (!googleClientEmail || !googlePrivateKey || !googleSheetId) {
     throw new Error(
@@ -314,7 +303,7 @@ async function submitViaGoogleApis(params: {
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: googleSheetId,
-    range: `${firstSheetTitle}!A:N`,
+    range: `${firstSheetTitle}!A:K`,
     valueInputOption: "USER_ENTERED",
     insertDataOption: "INSERT_ROWS",
     requestBody: {
@@ -376,7 +365,7 @@ export async function POST(request: Request) {
     }
 
     const cvBuffer = Buffer.from(await cv.arrayBuffer());
-    const context = createSubmissionContext(request);
+    const context = createSubmissionContext();
     const appsScriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
 
     if (appsScriptUrl) {

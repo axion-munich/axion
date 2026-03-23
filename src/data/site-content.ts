@@ -22,12 +22,6 @@ export type FaqItem = {
   answer: string;
 };
 
-export type TeamMember = {
-  name: string;
-  role: string;
-  image: string;
-};
-
 export const navLinks: NavLink[] = [
   { id: "about", label: "Mission" },
   { id: "students", label: "Students" },
@@ -59,7 +53,7 @@ export const studentHighlights: Highlight[] = [
   },
   {
     title: "What You’ll Do?",
-    text: "You’ll join interdisciplinary project teams, tackling real challenges from early-stage start-ups. You’ll also take part in workshops, providing you with essential training to set you up for a successful consulting project. Finally, you will participate in our in-person events, where you’ll meet other students, present your project work and join us for the afterparty.",
+    text: "You’ll join a project team, working on tailored operational or strategic solutions for a real early-stage start-up. You’ll also take part in workshops, providing you with essential training to set you up for a successful consulting project. Finally, you will participate in our in-person events, where you’ll meet other students, present your project work and join us for the afterparty.",
   },
   {
     title: "Time Commitment?",
@@ -69,7 +63,7 @@ export const studentHighlights: Highlight[] = [
 
 export const tracks: Track[] = [
   {
-    name: "Consulting Track",
+    name: "Summary",
     description:
       "In the Consulting Track, you will work in interdisciplinary teams on real projects, tackling the strategic and operational challenges faced by start-ups across various industries. You’ll develop solutions that help start-ups grow, raise capital, and strengthen their position in Munich’s start-up ecosystem.",
     experienceLabel: "Your experience with us:",
@@ -99,7 +93,7 @@ export const joinRequirements: Highlight[] = [
   },
   {
     title: "Student:",
-    text: "You are an enrolled student at a German university or other tertiary education facility.",
+    text: "You are enrolled at a German university or other tertiary education facility.",
   },
   {
     title: "Contribution:",
@@ -147,7 +141,7 @@ export const startupFaqs: FaqItem[] = [
     question:
       "What does the project journey with us look like, and how much of your time will it take?",
     answer:
-      "Our projects kick off in late November after we onboard and train our new members through workshops led by experienced consultants from top-tier consulting firms and internal mentors. Over eight weeks, your dedicated team will work on tailored solutions for your startup, with final results delivered by the end of January. To stay aligned, we schedule brief weekly check-ins, requiring about one to two hours of your time each week for feedback and discussions.",
+      "Our projects kick off on May 18, 2026 after we onboard and train our new members through workshops led by experienced consultants from top-tier consulting firms and internal mentors. Over eight weeks, your dedicated team will work on tailored solutions for your startup, with final results delivered by mid July. To stay aligned, we schedule brief weekly check-ins, requiring about one to two hours of your time each week for feedback and discussions.",
   },
   {
     question: "What are the costs of working with us, and how significant are they for a start-up?",
@@ -167,43 +161,6 @@ export const startupFaqs: FaqItem[] = [
   },
 ];
 
-export const stats = [
-  { label: "Members", value: "14" },
-  { label: "Nationalities", value: "8" },
-];
-
-export const teamMembers: TeamMember[] = [
-  {
-    name: "Fedor Olshevskiy",
-    role: "Founder",
-    image: "https://thb.tildacdn.net/tild6236-3563-4532-b932-376230656335/image1.jpg",
-  },
-  {
-    name: "Matvei Bobreshov",
-    role: "Founder",
-    image: "https://thb.tildacdn.net/tild6466-3263-4134-b132-613639636436/image2.jpg",
-  },
-  {
-    name: "Andrey Mikhaylenko",
-    role: "Founder",
-    image: "https://thb.tildacdn.net/tild6661-3736-4839-a262-646262353361/image3.jpg",
-  },
-  {
-    name: "Alexandr Kuprienko",
-    role: "Founder",
-    image: "https://thb.tildacdn.net/tild3238-6532-4935-b261-313663363761/image4.jpg",
-  },
-  {
-    name: "Paul Müller",
-    role: "Board Member",
-    image: "https://thb.tildacdn.net/tild3239-6265-4261-a464-633934626434/image5.jpg",
-  },
-  {
-    name: "Kirill Khvastov",
-    role: "Board Member",
-    image: "https://thb.tildacdn.net/tild3133-6533-4637-b535-336466626635/image6.jpg",
-  },
-];
 
 export const contact = {
   email: "contact@axion-munich.de",

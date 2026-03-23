@@ -33,7 +33,6 @@ import {
   navLinks,
   startupFaqs,
   startupSupportText,
-  stats,
   studentFaqs,
   studentHighlights,
   studentsIntro,
@@ -167,12 +166,12 @@ export default async function Home() {
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
                 <Users className="size-4 text-[#9fb1ff]" />
-                {stats[0].value} {stats[0].label}
+                {cms.teamStats.memberCount} Members
               </span>
               <span className="hidden h-4 w-px bg-border sm:block" />
               <span className="flex items-center gap-2">
                 <Globe className="size-4 text-[#9fb1ff]" />
-                {stats[1].value} {stats[1].label}
+                {cms.teamStats.nationalityCount} Nationalities
               </span>
             </div>
           </div>

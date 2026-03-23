@@ -1,8 +1,4 @@
-import { randomUUID } from "node:crypto";
-
 import { google } from "googleapis";
-
-import { teamMembers as defaultTeamMembers } from "@/data/site-content";
 
 export type EditableTeamMember = {
   id: string;
@@ -11,9 +7,15 @@ export type EditableTeamMember = {
   image: string;
 };
 
+export type TeamStats = {
+  memberCount: number;
+  nationalityCount: number;
+};
+
 export type SiteCms = {
   applicationsOpen: boolean;
   teamMembers: EditableTeamMember[];
+  teamStats: TeamStats;
   updatedAt: string;
 };
 
@@ -72,8 +74,8 @@ async function ensureTabs(sheets: Sheets, spreadsheetId: string) {
   const existing = spreadsheet.data.sheets?.map((s) => s.properties?.title) || [];
   const requests: object[] = [];
 
-  if (!existing.includes("Team")) {
-    requests.push({ addSheet: { properties: { title: "Team" } } });
+  if (!existing.includes("Form_Responses")) {
+    requests.push({ addSheet: { properties: { title: "Form_Responses" } } });
   }
 
   if (!existing.includes("Settings")) {
@@ -139,40 +141,56 @@ async function setSettingsValue(
   }
 }
 
-async function readTeamRows(sheets: Sheets, spreadsheetId: string): Promise<EditableTeamMember[]> {
+// Columns: A=Timestamp, B=First Name, C=Surname, D=Email, E=Phone, F=University, G=Nationality, H=Role, I=Image
+type TeamSheetRow = string[];
+
+async function readTeamRawRows(sheets: Sheets, spreadsheetId: string): Promise<TeamSheetRow[]> {
   const result = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: "Team!A:D",
+    range: "Form_Responses!A:I",
   });
 
   const rows = result.data.values || [];
 
+  // Skip header row
   if (rows.length <= 1) return [];
 
-  return rows
-    .slice(1)
-    .filter((row) => row[0])
-    .map((row) => ({
-      id: row[0] || randomUUID(),
-      name: row[1] || "",
-      role: row[2] || "",
-      image: row[3] || "",
-    }));
+  return rows.slice(1).filter((row) => row[1]); // filter out rows without a first name
 }
 
-async function getTeamTabSheetId(sheets: Sheets, spreadsheetId: string): Promise<number> {
+function mapRowsToMembers(rows: TeamSheetRow[]): EditableTeamMember[] {
+  return rows.map((row, index) => ({
+    id: `row-${index + 2}`, // +2 because row 1 is header, index is 0-based
+    name: [row[1] || "", row[2] || ""].filter(Boolean).join(" "),
+    role: row[7] || "",
+    image: row[8] || "",
+  }));
+}
+
+function computeStats(rows: TeamSheetRow[]): TeamStats {
+  const memberCount = rows.length;
+  const nationalities = new Set(
+    rows.map((row) => (row[6] || "").trim().toLowerCase()).filter(Boolean)
+  );
+  return {
+    memberCount,
+    nationalityCount: nationalities.size,
+  };
+}
+
+async function getFormResponsesSheetId(sheets: Sheets, spreadsheetId: string): Promise<number> {
   const spreadsheet = await sheets.spreadsheets.get({
     spreadsheetId,
     fields: "sheets.properties(sheetId,title)",
   });
 
-  const teamSheet = spreadsheet.data.sheets?.find((s) => s.properties?.title === "Team");
+  const tab = spreadsheet.data.sheets?.find((s) => s.properties?.title === "Form_Responses");
 
-  if (teamSheet?.properties?.sheetId == null) {
-    throw new Error("Team tab not found in the spreadsheet.");
+  if (tab?.properties?.sheetId == null) {
+    throw new Error("Form_Responses tab not found in the spreadsheet.");
   }
 
-  return teamSheet.properties.sheetId;
+  return tab.properties.sheetId;
 }
 
 /* ---------- In-memory cache ---------- */
@@ -182,36 +200,6 @@ const CACHE_TTL = 30_000;
 
 function invalidateCache() {
   cache = null;
-}
-
-/* ---------- Seed defaults ---------- */
-
-async function seedDefaults(sheets: Sheets, spreadsheetId: string): Promise<SiteCms> {
-  const defaults: EditableTeamMember[] = defaultTeamMembers.map((m) => ({
-    id: randomUUID(),
-    name: m.name,
-    role: m.role,
-    image: m.image,
-  }));
-
-  const headerRow = ["ID", "Name", "Role", "Image"];
-  const dataRows = defaults.map((m) => [m.id, m.name, m.role, m.image]);
-
-  await sheets.spreadsheets.values.update({
-    spreadsheetId,
-    range: "Team!A1",
-    valueInputOption: "RAW",
-    requestBody: { values: [headerRow, ...dataRows] },
-  });
-
-  await setSettingsValue(sheets, spreadsheetId, "applicationsOpen", "false");
-  await setSettingsValue(sheets, spreadsheetId, "updatedAt", new Date().toISOString());
-
-  return {
-    applicationsOpen: false,
-    teamMembers: defaults,
-    updatedAt: new Date().toISOString(),
-  };
 }
 
 /* ---------- Public API ---------- */
@@ -227,13 +215,9 @@ export async function getSiteCms(): Promise<SiteCms> {
 
   await ensureTabs(sheets, spreadsheetId);
 
-  const teamMembers = await readTeamRows(sheets, spreadsheetId);
-
-  if (teamMembers.length === 0) {
-    const seeded = await seedDefaults(sheets, spreadsheetId);
-    cache = { data: seeded, ts: Date.now() };
-    return seeded;
-  }
+  const rawRows = await readTeamRawRows(sheets, spreadsheetId);
+  const teamMembers = mapRowsToMembers(rawRows);
+  const teamStats = computeStats(rawRows);
 
   const applicationsOpenStr = await getSettingsValue(sheets, spreadsheetId, "applicationsOpen");
   const updatedAt =
@@ -242,6 +226,7 @@ export async function getSiteCms(): Promise<SiteCms> {
   const data: SiteCms = {
     applicationsOpen: applicationsOpenStr === "true",
     teamMembers,
+    teamStats,
     updatedAt,
   };
 
@@ -260,11 +245,14 @@ export async function setApplicationsOpen(applicationsOpen: boolean) {
 
   invalidateCache();
 
-  const teamMembers = await readTeamRows(sheets, spreadsheetId);
+  const rawRows = await readTeamRawRows(sheets, spreadsheetId);
+  const teamMembers = mapRowsToMembers(rawRows);
+  const teamStats = computeStats(rawRows);
 
   return {
     applicationsOpen,
     teamMembers,
+    teamStats,
     updatedAt: new Date().toISOString(),
   } satisfies SiteCms;
 }
@@ -279,38 +267,68 @@ export async function addTeamMember(input: AddTeamMemberInput) {
   // Ensure header row exists
   const existing = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: "Team!A1:D1",
+    range: "Form_Responses!A1:I1",
   });
 
   if (!existing.data.values?.length) {
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: "Team!A1",
+      range: "Form_Responses!A1",
       valueInputOption: "RAW",
-      requestBody: { values: [["ID", "Name", "Role", "Image"]] },
+      requestBody: {
+        values: [
+          [
+            "Timestamp",
+            "First Name",
+            "Surname",
+            "Email Address",
+            "Phone Number",
+            "University",
+            "Nationality",
+            "Role",
+            "Image",
+          ],
+        ],
+      },
     });
   }
 
-  const id = randomUUID();
+  const [firstName, ...surnameParts] = input.name.trim().split(/\s+/);
+  const surname = surnameParts.join(" ");
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: "Team!A:D",
+    range: "Form_Responses!A:I",
     valueInputOption: "RAW",
     insertDataOption: "INSERT_ROWS",
     requestBody: {
-      values: [[id, input.name.trim(), input.role.trim(), input.image.trim()]],
+      values: [
+        [
+          new Date().toISOString(), // Timestamp
+          firstName,
+          surname,
+          "", // Email
+          "", // Phone
+          "", // University
+          "", // Nationality
+          input.role.trim(),
+          input.image.trim(),
+        ],
+      ],
     },
   });
 
   await setSettingsValue(sheets, spreadsheetId, "updatedAt", new Date().toISOString());
   invalidateCache();
 
-  const teamMembers = await readTeamRows(sheets, spreadsheetId);
+  const rawRows = await readTeamRawRows(sheets, spreadsheetId);
+  const teamMembers = mapRowsToMembers(rawRows);
+  const teamStats = computeStats(rawRows);
 
   return {
     applicationsOpen: false,
     teamMembers,
+    teamStats,
     updatedAt: new Date().toISOString(),
   } satisfies SiteCms;
 }
@@ -322,27 +340,25 @@ export async function removeTeamMember(memberId: string) {
 
   await ensureTabs(sheets, spreadsheetId);
 
-  // Find the row with this ID
-  const result = await sheets.spreadsheets.values.get({
-    spreadsheetId,
-    range: "Team!A:A",
-  });
-
-  const ids = result.data.values || [];
-  let rowIndex = -1;
-
-  for (let i = 1; i < ids.length; i++) {
-    if (ids[i]?.[0] === memberId) {
-      rowIndex = i;
-      break;
-    }
+  // memberId is "row-{sheetRowNumber}", extract the row number
+  const match = memberId.match(/^row-(\d+)$/);
+  if (!match) {
+    throw new Error("Invalid team member ID format.");
   }
 
-  if (rowIndex === -1) {
+  const sheetRowNumber = parseInt(match[1], 10);
+
+  // Verify the row exists by reading it
+  const result = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `Form_Responses!A${sheetRowNumber}:I${sheetRowNumber}`,
+  });
+
+  if (!result.data.values?.length || !result.data.values[0][1]) {
     throw new Error("Team member not found.");
   }
 
-  const teamSheetId = await getTeamTabSheetId(sheets, spreadsheetId);
+  const tabSheetId = await getFormResponsesSheetId(sheets, spreadsheetId);
 
   await sheets.spreadsheets.batchUpdate({
     spreadsheetId,
@@ -351,10 +367,10 @@ export async function removeTeamMember(memberId: string) {
         {
           deleteDimension: {
             range: {
-              sheetId: teamSheetId,
+              sheetId: tabSheetId,
               dimension: "ROWS",
-              startIndex: rowIndex,
-              endIndex: rowIndex + 1,
+              startIndex: sheetRowNumber - 1, // 0-indexed
+              endIndex: sheetRowNumber,
             },
           },
         },
@@ -365,11 +381,14 @@ export async function removeTeamMember(memberId: string) {
   await setSettingsValue(sheets, spreadsheetId, "updatedAt", new Date().toISOString());
   invalidateCache();
 
-  const teamMembers = await readTeamRows(sheets, spreadsheetId);
+  const rawRows = await readTeamRawRows(sheets, spreadsheetId);
+  const teamMembers = mapRowsToMembers(rawRows);
+  const teamStats = computeStats(rawRows);
 
   return {
     applicationsOpen: false,
     teamMembers,
+    teamStats,
     updatedAt: new Date().toISOString(),
   } satisfies SiteCms;
 }
@@ -381,46 +400,62 @@ export async function updateTeamMember(input: UpdateTeamMemberInput) {
 
   await ensureTabs(sheets, spreadsheetId);
 
-  // Find the row
-  const result = await sheets.spreadsheets.values.get({
-    spreadsheetId,
-    range: "Team!A:D",
-  });
-
-  const rows = result.data.values || [];
-  let rowIndex = -1;
-
-  for (let i = 1; i < rows.length; i++) {
-    if (rows[i]?.[0] === input.id) {
-      rowIndex = i;
-      break;
-    }
+  // memberId is "row-{sheetRowNumber}"
+  const match = input.id.match(/^row-(\d+)$/);
+  if (!match) {
+    throw new Error("Invalid team member ID format.");
   }
 
-  if (rowIndex === -1) {
+  const sheetRowNumber = parseInt(match[1], 10);
+
+  // Read existing row to preserve other columns
+  const result = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `Form_Responses!A${sheetRowNumber}:I${sheetRowNumber}`,
+  });
+
+  const existingRow = result.data.values?.[0];
+  if (!existingRow || !existingRow[1]) {
     throw new Error("Team member not found.");
   }
 
-  const existingImage = rows[rowIndex][3] || "";
-  const image = input.image?.trim() || existingImage;
+  const [firstName, ...surnameParts] = input.name.trim().split(/\s+/);
+  const surname = surnameParts.join(" ");
+  const image = input.image?.trim() || existingRow[8] || "";
+
+  // Update only name (B, C), role (H), and image (I) — preserve other columns
+  const updatedRow = [
+    existingRow[0] || "", // Timestamp
+    firstName,
+    surname,
+    existingRow[3] || "", // Email
+    existingRow[4] || "", // Phone
+    existingRow[5] || "", // University
+    existingRow[6] || "", // Nationality
+    input.role.trim(),
+    image,
+  ];
 
   await sheets.spreadsheets.values.update({
     spreadsheetId,
-    range: `Team!A${rowIndex + 1}:D${rowIndex + 1}`,
+    range: `Form_Responses!A${sheetRowNumber}:I${sheetRowNumber}`,
     valueInputOption: "RAW",
     requestBody: {
-      values: [[input.id, input.name.trim(), input.role.trim(), image]],
+      values: [updatedRow],
     },
   });
 
   await setSettingsValue(sheets, spreadsheetId, "updatedAt", new Date().toISOString());
   invalidateCache();
 
-  const teamMembers = await readTeamRows(sheets, spreadsheetId);
+  const rawRows = await readTeamRawRows(sheets, spreadsheetId);
+  const teamMembers = mapRowsToMembers(rawRows);
+  const teamStats = computeStats(rawRows);
 
   return {
     applicationsOpen: false,
     teamMembers,
+    teamStats,
     updatedAt: new Date().toISOString(),
   } satisfies SiteCms;
 }

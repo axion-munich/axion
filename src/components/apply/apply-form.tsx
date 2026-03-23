@@ -396,6 +396,13 @@ export function ApplyForm() {
                         Selected file: {cvFile.name}
                       </p>
                     ) : null}
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      By submitting this application, you agree to our{" "}
+                      <a href="/privacy" className="underline hover:text-foreground">
+                        Privacy Policy
+                      </a>{" "}
+                      and the processing of your data for recruitment purposes.
+                    </p>
                   </div>
                 ) : null}
 

@@ -44,7 +44,7 @@ async function uploadTeamImage(file: File, memberName: string): Promise<string> 
 
   const email = process.env.GOOGLE_CLIENT_EMAIL;
   const key = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
-  const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+  const folderId = process.env.GOOGLE_TEAM_PHOTOS_FOLDER_ID;
 
   if (!email || !key) {
     throw new Error("Google credentials are not configured.");

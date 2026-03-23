@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import type { TeamMember } from "@/data/site-content";
+import type { EditableTeamMember } from "@/lib/site-cms";
 
 type TeamGridProps = {
-  members: TeamMember[];
+  members: EditableTeamMember[];
 };
 
 export function TeamGrid({ members }: TeamGridProps) {
@@ -14,7 +14,7 @@ export function TeamGrid({ members }: TeamGridProps) {
     <div className="space-y-5">
       <div className="space-y-2 text-center">
         <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-          Founders & Board
+          Our Team
         </p>
         <p className="mx-auto max-w-2xl text-sm leading-7 text-muted-foreground">
           Meet the people building axion behind the scenes.

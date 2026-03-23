@@ -7,92 +7,89 @@ const HEADERS = [
   "E-Mail",
   "CV Link",
   "Studiengang",
-  "Erfahrung / Projekte",
-  "Impact Story",
-  "Motivation / Track",
-  "Staerken",
+  "Motivation",
+  "Leadership",
+  "Business Idea",
   "Consent",
-  "Referer",
-  "Form ID",
   "Submitted At",
-  "Request ID",
 ];
 
 function doPost(e) {
   try {
-    const payload = JSON.parse(e.postData.contents || "{}");
-    const values = payload.values || {};
-    const context = payload.context || {};
-    const cv = payload.cv || {};
+    var payload = JSON.parse(e.postData.contents || "{}");
 
-    const required = [
-      "fullName",
-      "email",
-      "university",
-      "program",
-      "experience",
-      "impactStory",
-      "motivation",
-      "strengths",
-    ];
-
-    for (const field of required) {
-      if (!values[field] || String(values[field]).trim() === "") {
-        throw new Error("Missing field: " + field);
-      }
-    }
-
-    if (!cv.base64 || !cv.name) {
-      throw new Error("Missing CV payload.");
-    }
-
-    const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
-    const bytes = Utilities.base64Decode(cv.base64);
-    const blob = Utilities.newBlob(
-      bytes,
-      cv.mimeType || "application/octet-stream",
-      values.fullName + " - CV - " + Date.now() + " - " + cv.name
-    );
-    const file = folder.createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-
-    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
-    ensureHeaders(sheet);
-    const nameParts = String(values.fullName).trim().split(/\s+/);
-    const name = nameParts.shift() || String(values.fullName).trim();
-    const surname = nameParts.join(" ");
-    const row = [
-      name,
-      surname,
-      values.university,
-      values.email,
-      file.getUrl(),
-      values.program,
-      values.experience,
-      values.impactStory,
-      values.motivation,
-      values.strengths,
-      "yes",
-      context.referer || "https://axion-munich.de/apply",
-      "axion-next-apply",
-      context.sent || new Date().toISOString(),
-      context.requestId || Utilities.getUuid(),
-    ];
-
-    sheet.appendRow(row);
-
-    return jsonResponse({
-      ok: true,
-      message: "Application stored successfully.",
-      cvUrl: file.getUrl(),
-      rowNumber: sheet.getLastRow(),
-    });
+    return handleApplication(payload);
   } catch (error) {
     return jsonResponse({
       ok: false,
       error: error && error.message ? error.message : "Unknown Apps Script error.",
     });
   }
+}
+
+function handleApplication(payload) {
+  var values = payload.values || {};
+  var context = payload.context || {};
+  var cv = payload.cv || {};
+
+  var required = [
+    "fullName",
+    "email",
+    "university",
+    "program",
+    "motivation",
+    "leadership",
+    "businessIdea",
+  ];
+
+  for (var i = 0; i < required.length; i++) {
+    var field = required[i];
+    if (!values[field] || String(values[field]).trim() === "") {
+      throw new Error("Missing field: " + field);
+    }
+  }
+
+  if (!cv.base64 || !cv.name) {
+    throw new Error("Missing CV payload.");
+  }
+
+  var folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
+  var bytes = Utilities.base64Decode(cv.base64);
+  var blob = Utilities.newBlob(
+    bytes,
+    cv.mimeType || "application/octet-stream",
+    values.fullName + " - CV - " + Date.now() + " - " + cv.name
+  );
+  var file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
+  ensureHeaders(sheet);
+  var nameParts = String(values.fullName).trim().split(/\s+/);
+  var name = nameParts.shift() || String(values.fullName).trim();
+  var surname = nameParts.join(" ");
+  var row = [
+    name,
+    surname,
+    values.university,
+    values.email,
+    file.getUrl(),
+    values.program,
+    values.motivation,
+    values.leadership,
+    values.businessIdea,
+    "yes",
+    context.sent || new Date().toISOString(),
+  ];
+
+  sheet.appendRow(row);
+
+  return jsonResponse({
+    ok: true,
+    message: "Application stored successfully.",
+    cvUrl: file.getUrl(),
+    rowNumber: sheet.getLastRow(),
+  });
 }
 
 function jsonResponse(payload) {
