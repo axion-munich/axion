@@ -22,10 +22,49 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
 });
 
+const SITE_URL = "https://axion-munich.de";
+
 export const metadata: Metadata = {
-  title: "axion Munich",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "axion Munich – Student Consulting for Start-Ups",
+    template: "%s | axion Munich",
+  },
   description:
-    "Student-driven consulting initiative in Munich connecting founders, investors, and interdisciplinary student teams.",
+    "Munich-based, student-driven consulting club. Interdisciplinary teams from Germany's top universities deliver strategy and operational consulting for early-stage start-ups.",
+  keywords: [
+    "student consulting",
+    "Munich",
+    "start-up consulting",
+    "axion",
+    "student-driven",
+    "venture capital",
+    "strategy consulting",
+    "Germany",
+  ],
+  authors: [{ name: "axion Munich" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: "axion Munich",
+    title: "axion Munich – Student Consulting for Start-Ups",
+    description:
+      "Munich-based, student-driven consulting club. Interdisciplinary teams from Germany's top universities deliver strategy and operational consulting for early-stage start-ups.",
+  },
+  twitter: {
+    card: "summary",
+    title: "axion Munich – Student Consulting for Start-Ups",
+    description:
+      "Munich-based, student-driven consulting club delivering strategy and operational consulting for early-stage start-ups.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: SITE_URL,
+  },
 };
 
 export default function RootLayout({

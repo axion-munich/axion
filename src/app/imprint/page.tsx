@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Imprint | axion",
+  title: "Imprint",
+  description: "Legal notice and imprint for axion Munich.",
 };
 
 export default function ImprintPage() {

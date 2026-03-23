@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Terms | axion",
+  title: "Terms",
+  description: "Terms and conditions for axion Munich.",
 };
 
 export default function TermsPage() {

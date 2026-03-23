@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ApplyForm } from "@/components/apply/apply-form";
@@ -5,6 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSiteCms } from "@/lib/site-cms";
+
+export const metadata: Metadata = {
+  title: "Apply",
+  description:
+    "Apply to join axion Munich. Work on real start-up projects, gain consulting experience, and build your network in Munich's founder ecosystem.",
+};
 
 export const dynamic = "force-dynamic";
 

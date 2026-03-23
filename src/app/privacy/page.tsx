@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Privacy Policy | axion",
+  title: "Privacy Policy",
+  description: "Privacy policy and data protection information for axion Munich.",
 };
 
 export default function PrivacyPage() {
