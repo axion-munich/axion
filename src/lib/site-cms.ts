@@ -74,8 +74,8 @@ async function ensureTabs(sheets: Sheets, spreadsheetId: string) {
   const existing = spreadsheet.data.sheets?.map((s) => s.properties?.title) || [];
   const requests: object[] = [];
 
-  if (!existing.includes("Form_Responses")) {
-    requests.push({ addSheet: { properties: { title: "Form_Responses" } } });
+  if (!existing.includes("Form responses 1")) {
+    requests.push({ addSheet: { properties: { title: "Form responses 1" } } });
   }
 
   if (!existing.includes("Settings")) {
@@ -147,7 +147,7 @@ type TeamSheetRow = string[];
 async function readTeamRawRows(sheets: Sheets, spreadsheetId: string): Promise<TeamSheetRow[]> {
   const result = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: "Form_Responses!A:I",
+    range: "'Form responses 1'!A:I",
   });
 
   const rows = result.data.values || [];
@@ -184,10 +184,10 @@ async function getFormResponsesSheetId(sheets: Sheets, spreadsheetId: string): P
     fields: "sheets.properties(sheetId,title)",
   });
 
-  const tab = spreadsheet.data.sheets?.find((s) => s.properties?.title === "Form_Responses");
+  const tab = spreadsheet.data.sheets?.find((s) => s.properties?.title === "Form responses 1");
 
   if (tab?.properties?.sheetId == null) {
-    throw new Error("Form_Responses tab not found in the spreadsheet.");
+    throw new Error("'Form responses 1' tab not found in the spreadsheet.");
   }
 
   return tab.properties.sheetId;
@@ -267,13 +267,13 @@ export async function addTeamMember(input: AddTeamMemberInput) {
   // Ensure header row exists
   const existing = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: "Form_Responses!A1:I1",
+    range: "'Form responses 1'!A1:I1",
   });
 
   if (!existing.data.values?.length) {
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: "Form_Responses!A1",
+      range: "'Form responses 1'!A1",
       valueInputOption: "RAW",
       requestBody: {
         values: [
@@ -298,7 +298,7 @@ export async function addTeamMember(input: AddTeamMemberInput) {
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: "Form_Responses!A:I",
+    range: "'Form responses 1'!A:I",
     valueInputOption: "RAW",
     insertDataOption: "INSERT_ROWS",
     requestBody: {
@@ -351,7 +351,7 @@ export async function removeTeamMember(memberId: string) {
   // Verify the row exists by reading it
   const result = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `Form_Responses!A${sheetRowNumber}:I${sheetRowNumber}`,
+    range: `'Form responses 1'!A${sheetRowNumber}:I${sheetRowNumber}`,
   });
 
   if (!result.data.values?.length || !result.data.values[0][1]) {
@@ -411,7 +411,7 @@ export async function updateTeamMember(input: UpdateTeamMemberInput) {
   // Read existing row to preserve other columns
   const result = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `Form_Responses!A${sheetRowNumber}:I${sheetRowNumber}`,
+    range: `'Form responses 1'!A${sheetRowNumber}:I${sheetRowNumber}`,
   });
 
   const existingRow = result.data.values?.[0];
@@ -438,7 +438,7 @@ export async function updateTeamMember(input: UpdateTeamMemberInput) {
 
   await sheets.spreadsheets.values.update({
     spreadsheetId,
-    range: `Form_Responses!A${sheetRowNumber}:I${sheetRowNumber}`,
+    range: `'Form responses 1'!A${sheetRowNumber}:I${sheetRowNumber}`,
     valueInputOption: "RAW",
     requestBody: {
       values: [updatedRow],
