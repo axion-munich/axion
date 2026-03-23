@@ -154,7 +154,7 @@
   }
 
   .axion-section {
-    @apply py-16 md:py-24;
+    @apply py-20 md:py-32;
   }
 
   .axion-title {
@@ -166,7 +166,7 @@
     display: flex;
     width: max-content;
     gap: 1.5rem;
-    animation: axion-marquee 48s linear infinite;
+    animation: axion-marquee 36s linear infinite;
   }
 
   .axion-marquee-track:hover {
@@ -329,7 +329,7 @@
   }
 
   100% {
-    transform: translateX(calc(-50% - 0.75rem));
+    transform: translateX(calc(-33.333% - 0.5rem));
   }
 }
 

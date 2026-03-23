@@ -8,15 +8,15 @@ type TeamGridProps = {
 };
 
 export function TeamGrid({ members }: TeamGridProps) {
-  const marqueeMembers = [...members, ...members];
+  const marqueeMembers = [...members, ...members, ...members];
 
   return (
     <div className="space-y-5">
-      <div className="space-y-2">
+      <div className="space-y-2 text-center">
         <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
           Founders & Board
         </p>
-        <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
+        <p className="mx-auto max-w-2xl text-sm leading-7 text-muted-foreground">
           Meet the people building axion behind the scenes.
         </p>
       </div>
