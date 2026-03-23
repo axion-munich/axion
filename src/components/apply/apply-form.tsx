@@ -19,10 +19,9 @@ type FormValues = {
   email: string;
   university: string;
   program: string;
-  experience: string;
-  impactStory: string;
   motivation: string;
-  strengths: string;
+  leadership: string;
+  businessIdea: string;
 };
 
 const MAX_CV_SIZE_BYTES = 5 * 1024 * 1024;
@@ -32,7 +31,6 @@ const STEP_TITLES = [
   "Question 1",
   "Question 2",
   "Question 3",
-  "Question 4",
   "CV upload",
 ] as const;
 
@@ -41,10 +39,9 @@ const INITIAL_VALUES: FormValues = {
   email: "",
   university: "",
   program: "",
-  experience: "",
-  impactStory: "",
   motivation: "",
-  strengths: "",
+  leadership: "",
+  businessIdea: "",
 };
 
 export function ApplyForm() {
@@ -72,23 +69,19 @@ export function ApplyForm() {
       return null;
     }
 
-    if (currentStep === 1 && !values.experience.trim()) {
+    if (currentStep === 1 && !values.motivation.trim()) {
       return "Please answer question 1 before continuing.";
     }
 
-    if (currentStep === 2 && !values.impactStory.trim()) {
+    if (currentStep === 2 && !values.leadership.trim()) {
       return "Please answer question 2 before continuing.";
     }
 
-    if (currentStep === 3 && !values.motivation.trim()) {
+    if (currentStep === 3 && !values.businessIdea.trim()) {
       return "Please answer question 3 before continuing.";
     }
 
-    if (currentStep === 4 && !values.strengths.trim()) {
-      return "Please answer question 4 before continuing.";
-    }
-
-    if (currentStep === 5) {
+    if (currentStep === 4) {
       if (!cvFile) {
         return "Please upload your CV before submitting.";
       }
@@ -139,10 +132,9 @@ export function ApplyForm() {
     payload.append("email", values.email.trim());
     payload.append("university", values.university.trim());
     payload.append("program", values.program.trim());
-    payload.append("experience", values.experience.trim());
-    payload.append("impactStory", values.impactStory.trim());
     payload.append("motivation", values.motivation.trim());
-    payload.append("strengths", values.strengths.trim());
+    payload.append("leadership", values.leadership.trim());
+    payload.append("businessIdea", values.businessIdea.trim());
     payload.append("cv", cvFile);
 
     setIsSubmitting(true);
@@ -335,39 +327,7 @@ export function ApplyForm() {
                 {step === 1 ? (
                   <div className="grid gap-3">
                     <p className="text-sm font-medium text-foreground">
-                      Tell us about your previous internships, work experiences, or projects. What was your role and what did you do?
-                    </p>
-                    <textarea
-                      name="experience"
-                      rows={8}
-                      value={values.experience}
-                      onChange={(event) => updateField("experience", event.target.value)}
-                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:ring-2 focus:ring-primary/35"
-                      placeholder="Write your answer here"
-                    />
-                  </div>
-                ) : null}
-
-                {step === 2 ? (
-                  <div className="grid gap-3">
-                    <p className="text-sm font-medium text-foreground">
-                      Describe one achievement or impact story you are proud of. What was the challenge and what was the result?
-                    </p>
-                    <textarea
-                      name="impactStory"
-                      rows={8}
-                      value={values.impactStory}
-                      onChange={(event) => updateField("impactStory", event.target.value)}
-                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:ring-2 focus:ring-primary/35"
-                      placeholder="Write your answer here"
-                    />
-                  </div>
-                ) : null}
-
-                {step === 3 ? (
-                  <div className="grid gap-3">
-                    <p className="text-sm font-medium text-foreground">
-                      Why do you want to join axion, and which area interests you most (Consulting Track or Venture Track)?
+                      What interests you most about start-up consulting and why do you want to join axion?
                     </p>
                     <textarea
                       name="motivation"
@@ -380,23 +340,39 @@ export function ApplyForm() {
                   </div>
                 ) : null}
 
-                {step === 4 ? (
+                {step === 2 ? (
                   <div className="grid gap-3">
                     <p className="text-sm font-medium text-foreground">
-                      What skills, perspectives, or strengths would you bring to axion and to a project team?
+                      Describe a time when you took on a leadership role or worked collaboratively in a team. What did you learn from that experience?
                     </p>
                     <textarea
-                      name="strengths"
+                      name="leadership"
                       rows={8}
-                      value={values.strengths}
-                      onChange={(event) => updateField("strengths", event.target.value)}
+                      value={values.leadership}
+                      onChange={(event) => updateField("leadership", event.target.value)}
                       className="rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:ring-2 focus:ring-primary/35"
                       placeholder="Write your answer here"
                     />
                   </div>
                 ) : null}
 
-                {step === 5 ? (
+                {step === 3 ? (
+                  <div className="grid gap-3">
+                    <p className="text-sm font-medium text-foreground">
+                      If you could start your own business or initiative, what would it be and why?
+                    </p>
+                    <textarea
+                      name="businessIdea"
+                      rows={8}
+                      value={values.businessIdea}
+                      onChange={(event) => updateField("businessIdea", event.target.value)}
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:ring-2 focus:ring-primary/35"
+                      placeholder="Write your answer here"
+                    />
+                  </div>
+                ) : null}
+
+                {step === 4 ? (
                   <div className="grid gap-3">
                     <p className="text-sm font-medium text-foreground">
                       Upload your CV (PDF, DOC, DOCX, max 5MB)

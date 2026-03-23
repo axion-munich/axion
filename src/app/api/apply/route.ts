@@ -13,10 +13,9 @@ const REQUIRED_TEXT_FIELDS = [
   "email",
   "university",
   "program",
-  "experience",
-  "impactStory",
   "motivation",
-  "strengths",
+  "leadership",
+  "businessIdea",
 ] as const;
 
 const MAX_CV_SIZE_BYTES = 5 * 1024 * 1024;
@@ -44,10 +43,9 @@ const SHEET_HEADERS = [
   "E-Mail",
   "CV Link",
   "Studiengang",
-  "Erfahrung / Projekte",
-  "Impact Story",
-  "Motivation / Track",
-  "Staerken",
+  "Motivation",
+  "Leadership",
+  "Business Idea",
   "Consent",
   "Referer",
   "Form ID",
@@ -96,10 +94,9 @@ function buildSheetRow(values: SubmissionValues, cvUrl: string, context: Submiss
     values.email,
     cvUrl,
     values.program,
-    values.experience,
-    values.impactStory,
     values.motivation,
-    values.strengths,
+    values.leadership,
+    values.businessIdea,
     "yes",
     context.referer,
     "axion-next-apply",
@@ -130,7 +127,7 @@ async function ensureSheetHeaders(params: {
     throw new Error("Could not resolve the target Google Sheet tab.");
   }
 
-  const headerRange = `${sheetTitle}!A1:O1`;
+  const headerRange = `${sheetTitle}!A1:N1`;
   const existing = await sheets.spreadsheets.values.get({
     spreadsheetId,
     range: headerRange,
@@ -317,7 +314,7 @@ async function submitViaGoogleApis(params: {
 
   await sheets.spreadsheets.values.append({
     spreadsheetId: googleSheetId,
-    range: `${firstSheetTitle}!A:O`,
+    range: `${firstSheetTitle}!A:N`,
     valueInputOption: "USER_ENTERED",
     insertDataOption: "INSERT_ROWS",
     requestBody: {
@@ -344,10 +341,9 @@ export async function POST(request: Request) {
       email: "",
       university: "",
       program: "",
-      experience: "",
-      impactStory: "",
       motivation: "",
-      strengths: "",
+      leadership: "",
+      businessIdea: "",
     };
 
     for (const field of REQUIRED_TEXT_FIELDS) {

@@ -36,7 +36,7 @@ export const navLinks: NavLink[] = [
 
 export const hero = {
   kicker: "Based in Munich",
-  title: "Student consult, founders scale, investors discover",
+  title: "Students consult, founders scale, investors discover",
   subtitle:
     "axion is a Munich-based, student-driven consulting club where students from Germany’s top universities tackle real start-up challenges. We provide tailored support in strategy and operational consulting, focusing on areas such as market entry, organizational development, financial management, and fundraising preparation. Our interdisciplinary teams of students leverage diverse academic backgrounds to deliver actionable solutions for client start-ups. Beyond consulting, we serve as a bridge to Europe’s venture capital ecosystem. We prepare start-ups for fundraising and connect them with leading VCs, business angels, and innovation networks.",
   ctaPrimary: { label: "For Students", href: "#students" },
@@ -44,14 +44,14 @@ export const hero = {
 };
 
 export const missionText =
-  "As a Munich-based student initiative, we connect ambitious founders with resources and networks by running student-led consulting projects and building on the innovative environment of the city’s universities. Our mission is to empower early-stage startups with tailored consulting and access to Europe’s venture network, while at the same time providing students from German universities with hands-on experience across consulting, investment and entrepreneurial domains. We create a unique platform where founders receive the strategic and operational support they need to grow and students gain the knowledge, skills, and connections to launch their own careers – all within one organization.";
+  "Our mission is to turn early-stage start-up ideas into reality through student led consulting while giving students the opportunity to create real impact and gain hands-on experience.";
 
-export const studentsIntro = "Why us? –";
+export const studentsIntro = "Why us?";
 
 export const studentHighlights: Highlight[] = [
   {
     title: "Why Join?",
-    text: "At axion, you’ll gain hands-on experience by working directly with real start-ups and investors. You’ll develop skills in strategy and operational consulting, and entrepreneurship while building a strong network in founders ecosystem for your future career.",
+    text: "At axion, you’ll gain hands-on experience by working directly with real start-ups. You’ll develop skills in strategy and operational consulting, and entrepreneurship while building a strong network in founders ecosystem for your future career.",
   },
   {
     title: "Who We’re Looking For?",
@@ -59,7 +59,7 @@ export const studentHighlights: Highlight[] = [
   },
   {
     title: "What You’ll Do?",
-    text: "You’ll join interdisciplinary project teams, tackling real challenges from early-stage start-ups. You’ll also take part in workshops and live pitching events with investors to prepare for careers in consulting, venture capital, or entrepreneurship.",
+    text: "You’ll join interdisciplinary project teams, tackling real challenges from early-stage start-ups. You’ll also take part in workshops, providing you with essential training to set you up for a successful consulting project. Finally, you will participate in our in-person events, where you’ll meet other students, present your project work and join us for the afterparty.",
   },
   {
     title: "Time Commitment?",
@@ -87,23 +87,6 @@ export const tracks: Track[] = [
       "Investor (VC) Pitch Preparation",
     ],
   },
-  {
-    name: "Venture Track",
-    description:
-      "In the Venture Track, you will identify and evaluate start-ups, develop strategic insights through industry research, and foster collaboration across the venture ecosystem.",
-    experienceLabel: "Your experience with us:",
-    experienceItems: [
-      "Scout for start-ups for potential cooperation via databases, LinkedIn, incubators, pitch events etc.",
-      "Work on the research reports and their publishing within the VC community",
-    ],
-    focusLabel: "Core Focus Areas:",
-    focusAreas: [
-      "Start-up Ecosystem research",
-      "Market and Trend Mapping",
-      "Start-up evaluation and investment screening",
-      "Development of the Start-up Industry Insights Report",
-    ],
-  },
 ];
 
 export const joinRequirementsIntro =
@@ -112,27 +95,27 @@ export const joinRequirementsIntro =
 export const joinRequirements: Highlight[] = [
   {
     title: "Motivation:",
-    text: "You are eager to gain hands-on experience with real consulting projects and passionate about the start-up ecosystem. At axion, you can see the tangible impact of your recommendations in a short time and contribute to shaping the future. What matters most is your drive – with the right motivation, you can create meaningful change and global impact!",
+    text: "You are a highly motivated student who is interested in the start-up ecosystem and eager to take ownership and learn.",
   },
   {
     title: "Student:",
-    text: "We welcome students from all German universities and tertiary education facilities – diversity is key to our work. You don’t need to come from an economics or business background: we are looking for motivated students from a wide range of study fields, since innovative consulting benefits from different perspectives.",
+    text: "You are an enrolled student at a German university or other tertiary education facility.",
   },
   {
     title: "Contribution:",
-    text: "During your time with axion, you can expect a variety of exciting activities such as workshops, team events, and Demo Days in addition to your consulting projects. In your first semester, participation in our mandatory courses and workshops is required to ensure a strong foundation. On average, you should plan to dedicate about 10 hours per week to this initiative.",
+    text: "You are a team player, ready to commit yourself during the project and stick to deadlines.",
   },
 ];
 
 export const startupSupportText =
   "axion is a Munich-based, student-driven consulting club where students from Germany’s top universities tackle real start-up challenges. We provide tailored support in strategy and operational consulting, focusing on areas such as market entry, organizational development, financial management, and fundraising preparation. Our interdisciplinary teams of students leverage diverse academic backgrounds to deliver actionable solutions for client start-ups. Beyond consulting, we serve as a bridge to Europe’s venture capital ecosystem. We prepare start-ups for fundraising and connect them with leading VCs, business angels, and innovation networks.";
 
-export const whyUsLabel = "Why us? –";
+export const whyUsLabel = "Why us?";
 
 export const applicationStatus = {
-  title: "Applications are closed for Winter 2025/26",
+  title: "Project applications are open year-round.",
   details: "",
-  ctaLabel: "Interested? Contact us",
+  ctaLabel: "Contact us",
   ctaHref: "#contacts",
 };
 
@@ -155,7 +138,7 @@ export const studentFaqs: FaqItem[] = [
   {
     question: "What is the application deadline and how does the recruitment process look like?",
     answer:
-      "We accept applications on a rolling basis — so early applications are encouraged. You’ll hear back from us within a week after submitting your application. If shortlisted, we’ll invite you to a short video interview to learn more about you and your interests. Successful applicants will join a project team for the semester.",
+      "Applications for Summer Semester 2026 will open on April 13, 2026. The application deadline is on May 6, 2026 EOD. We will be reviewing applications as soon as they arrive, so early applications are encouraged. If shortlisted, we’ll invite you to a short video interview during our interview weekend on May 7–9, 2026. You’ll hear from us on May 11, 2026 regarding the admission decision.",
   },
 ];
 
@@ -174,7 +157,7 @@ export const startupFaqs: FaqItem[] = [
   {
     question: "What sets us apart from traditional student consultancies?",
     answer:
-      "Unlike many student consultancies that provide overly theoretical advice, we focus on creating solutions that are realistic, relevant, and ready to be put into action. At Axion, we combine strategic insights with operational analysis and actively support you throughout the implementation of our recommendations. Moreover, we dedicate our work exclusively to the early-stage start-ups, helping founders turn ideas into real growth through hands-on support at a fraction of the cost charged by most student consultancies. We also connect you to Munich’s vibrant student ecosystem, including startups, investors, and other initiatives that can help your venture grow. Think of us not just as consultants but as your startup’s first friends in Munich’s innovation scene.",
+      "Unlike many student consultancies that provide overly theoretical advice, we focus on creating solutions that are realistic, relevant, and ready to be put into action. At axion, we combine strategic insights with operational analysis and actively support you throughout the implementation of our recommendations. Moreover, we dedicate our work exclusively to the early-stage start-ups, helping founders turn ideas into real growth through hands-on support at a fraction of the cost charged by most student consultancies. We also connect you to Munich’s vibrant student ecosystem, including start-ups, investors, and other initiatives that can help your venture grow. Think of us not just as consultants but as your start-up’s first friends in Munich’s innovation scene.",
   },
   {
     question:
