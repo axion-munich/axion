@@ -84,7 +84,7 @@ async function uploadTeamImage(file: File, memberName: string): Promise<string> 
     supportsAllDrives: true,
   });
 
-  return `https://drive.google.com/uc?export=view&id=${fileId}`;
+  return `https://lh3.googleusercontent.com/d/${fileId}`;
 }
 
 export async function POST(request: NextRequest) {
