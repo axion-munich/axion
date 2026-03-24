@@ -12,8 +12,13 @@ export type TeamStats = {
   nationalityCount: number;
 };
 
+export type BannerItem = {
+  text: string;
+};
+
 export type SiteCms = {
   applicationsOpen: boolean;
+  banners: BannerItem[];
   teamMembers: EditableTeamMember[];
   teamStats: TeamStats;
   updatedAt: string;
@@ -220,11 +225,19 @@ export async function getSiteCms(): Promise<SiteCms> {
   const teamStats = computeStats(rawRows);
 
   const applicationsOpenStr = await getSettingsValue(sheets, spreadsheetId, "applicationsOpen");
+  const bannersRaw = await getSettingsValue(sheets, spreadsheetId, "banners");
+  let banners: BannerItem[] = [];
+  try {
+    if (bannersRaw) banners = JSON.parse(bannersRaw);
+  } catch {
+    banners = [];
+  }
   const updatedAt =
     (await getSettingsValue(sheets, spreadsheetId, "updatedAt")) || new Date().toISOString();
 
   const data: SiteCms = {
     applicationsOpen: applicationsOpenStr === "true",
+    banners,
     teamMembers,
     teamStats,
     updatedAt,
@@ -251,6 +264,7 @@ export async function setApplicationsOpen(applicationsOpen: boolean) {
 
   return {
     applicationsOpen,
+    banners: [],
     teamMembers,
     teamStats,
     updatedAt: new Date().toISOString(),
@@ -327,6 +341,7 @@ export async function addTeamMember(input: AddTeamMemberInput) {
 
   return {
     applicationsOpen: false,
+    banners: [],
     teamMembers,
     teamStats,
     updatedAt: new Date().toISOString(),
@@ -387,6 +402,7 @@ export async function removeTeamMember(memberId: string) {
 
   return {
     applicationsOpen: false,
+    banners: [],
     teamMembers,
     teamStats,
     updatedAt: new Date().toISOString(),
@@ -454,8 +470,21 @@ export async function updateTeamMember(input: UpdateTeamMemberInput) {
 
   return {
     applicationsOpen: false,
+    banners: [],
     teamMembers,
     teamStats,
     updatedAt: new Date().toISOString(),
   } satisfies SiteCms;
+}
+
+export async function setBanners(items: BannerItem[]) {
+  const auth = getAuth();
+  const spreadsheetId = getSheetId();
+  const sheets = google.sheets({ version: "v4", auth });
+
+  await ensureTabs(sheets, spreadsheetId);
+  await setSettingsValue(sheets, spreadsheetId, "banners", JSON.stringify(items));
+  await setSettingsValue(sheets, spreadsheetId, "updatedAt", new Date().toISOString());
+
+  invalidateCache();
 }

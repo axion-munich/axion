@@ -33,12 +33,18 @@ export function TeamGrid({ members }: TeamGridProps) {
               aria-hidden={index >= members.length}
             >
               <div className="relative aspect-[3/4] w-28 shrink-0 overflow-hidden rounded-xl bg-muted/25 sm:w-32">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.02]"
-                  loading="lazy"
-                />
+                {member.image ? (
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.02]"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-2xl font-semibold text-muted-foreground/40">
+                    {member.name.charAt(0)}
+                  </div>
+                )}
               </div>
 
               <div className="min-w-0 space-y-1 pt-2">

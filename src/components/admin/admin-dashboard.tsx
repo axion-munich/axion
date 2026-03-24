@@ -4,12 +4,13 @@ import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle, CheckCircle2, Info } from "lucide-react";
 
-import type { EditableTeamMember } from "@/lib/site-cms";
+import type { BannerItem, EditableTeamMember } from "@/lib/site-cms";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type AdminDashboardProps = {
   initialApplicationsOpen: boolean;
+  initialBanners: BannerItem[];
   initialTeamMembers: EditableTeamMember[];
 };
 
@@ -21,6 +22,7 @@ type AdminToast = {
 
 export function AdminDashboard({
   initialApplicationsOpen,
+  initialBanners,
   initialTeamMembers,
 }: AdminDashboardProps) {
   const router = useRouter();
@@ -33,6 +35,8 @@ export function AdminDashboard({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [toasts, setToasts] = useState<AdminToast[]>([]);
+  const [banners, setBanners] = useState<BannerItem[]>(initialBanners);
+  const [bannerLoading, setBannerLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     role: "",
@@ -87,6 +91,89 @@ export function AdminDashboard({
       );
     } finally {
       setToggleLoading(false);
+    }
+  }
+
+  function updateBannerText(index: number, value: string) {
+    setBanners((prev) => prev.map((b, i) => (i === index ? { text: value } : b)));
+  }
+
+  function addBannerRow() {
+    setBanners((prev) => [...prev, { text: "" }]);
+  }
+
+  async function removeBannerRow(index: number) {
+    const next = banners.filter((_, i) => i !== index);
+    setBanners(next);
+
+    const filtered = next.filter((b) => b.text.trim());
+    try {
+      const response = await fetch("/api/admin/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ banners: filtered }),
+      });
+
+      const data = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(data.error || "Could not remove banner.");
+      }
+
+      showToast("success", "Banner removed.");
+    } catch (error) {
+      showToast("error", error instanceof Error ? error.message : "Could not remove banner.");
+    }
+  }
+
+  async function saveBanners() {
+    setBannerLoading(true);
+    const filtered = banners.filter((b) => b.text.trim());
+
+    try {
+      const response = await fetch("/api/admin/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ banners: filtered }),
+      });
+
+      const data = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(data.error || "Could not update banners.");
+      }
+
+      setBanners(filtered.length > 0 ? filtered : []);
+      showToast("success", filtered.length > 0 ? "Banners updated." : "Banners cleared.");
+    } catch (error) {
+      showToast("error", error instanceof Error ? error.message : "Could not update banners.");
+    } finally {
+      setBannerLoading(false);
+    }
+  }
+
+  async function clearBanners() {
+    setBanners([]);
+    setBannerLoading(true);
+
+    try {
+      const response = await fetch("/api/admin/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ banners: [] }),
+      });
+
+      const data = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(data.error || "Could not clear banners.");
+      }
+
+      showToast("success", "Banners cleared.");
+    } catch (error) {
+      showToast("error", error instanceof Error ? error.message : "Could not clear banners.");
+    } finally {
+      setBannerLoading(false);
     }
   }
 
@@ -252,6 +339,63 @@ export function AdminDashboard({
                   Close applications
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border bg-card/80">
+            <CardHeader>
+              <CardTitle className="axion-title text-2xl text-foreground">Announcement Banners</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {banners.map((banner, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    value={banner.text}
+                    onChange={(e) => updateBannerText(index, e.target.value)}
+                    className="h-11 flex-1 rounded-lg border border-border bg-background px-3 text-sm outline-none transition focus:ring-2 focus:ring-primary/35"
+                    placeholder="Banner text"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeBannerRow(index)}
+                    className="shrink-0 rounded-full border-red-500/30 bg-red-500/10 text-red-500 hover:bg-red-500/15 hover:text-red-500"
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={addBannerRow}
+                className="rounded-full border-border bg-card/70 hover:bg-accent"
+              >
+                + Add announcement
+              </Button>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  type="button"
+                  disabled={bannerLoading}
+                  onClick={saveBanners}
+                  className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  {bannerLoading ? "Saving..." : "Save banners"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={bannerLoading || banners.length === 0}
+                  onClick={clearBanners}
+                  className="rounded-full border-border bg-card/70 hover:bg-accent"
+                >
+                  Clear all
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Multiple banners rotate every 30 seconds on the homepage. Remove all to hide the banner.
+              </p>
             </CardContent>
           </Card>
 

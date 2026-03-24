@@ -41,6 +41,7 @@ export default async function AdminPage() {
         ) : authenticated && cms ? (
           <AdminDashboard
             initialApplicationsOpen={cms.applicationsOpen}
+            initialBanners={cms.banners}
             initialTeamMembers={cms.teamMembers}
           />
         ) : (

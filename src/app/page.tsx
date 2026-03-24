@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { AnnouncementBanner } from "@/components/announcement-banner";
 import { MobileNav } from "@/components/mobile-nav";
 import { StudentTabs } from "@/components/student-tabs";
 import { TeamGrid } from "@/components/team-grid";
@@ -75,6 +76,9 @@ export default async function Home() {
 
   return (
     <div id="top" className="relative min-h-screen overflow-x-clip">
+      {cms.banners.length > 0 ? (
+        <AnnouncementBanner banners={cms.banners} />
+      ) : null}
       <header className="relative z-40 px-4 pt-5">
         <div className="axion-container">
           <div className="relative flex min-h-[4.5rem] items-center rounded-[1.75rem] border border-white/30 bg-white/58 px-4 shadow-[0_22px_70px_-38px_rgba(15,23,42,0.55)] backdrop-blur-2xl dark:border-white/10 dark:bg-[#0b1020]/62 sm:px-6">
@@ -263,7 +267,7 @@ export default async function Home() {
                       className="border-border"
                     >
                       <AccordionTrigger className="text-sm text-foreground hover:no-underline">
-                        {`— ${faq.question}`}
+                        {faq.question}
                       </AccordionTrigger>
                       <AccordionContent className="text-sm leading-7 text-muted-foreground">
                         {faq.answer}
@@ -287,7 +291,7 @@ export default async function Home() {
                       className="border-border"
                     >
                       <AccordionTrigger className="text-sm text-foreground hover:no-underline">
-                        {`— ${faq.question}`}
+                        {faq.question}
                       </AccordionTrigger>
                       <AccordionContent className="text-sm leading-7 text-muted-foreground">
                         {faq.answer}
