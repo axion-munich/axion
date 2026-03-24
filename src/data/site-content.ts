@@ -44,19 +44,19 @@ export const studentsIntro = "Why us?";
 
 export const studentHighlights: Highlight[] = [
   {
-    title: "Why Join?",
+    title: "Why Join",
     text: "At axion, you’ll gain hands-on experience by working directly with real start-ups. You’ll develop skills in strategy and operational consulting, and entrepreneurship while building a strong network in founders ecosystem for your future career.",
   },
   {
-    title: "Who We’re Looking For?",
+    title: "Who We’re Looking For",
     text: "We welcome motivated students from all German universities and study backgrounds, from business and economics to engineering, informatics, and the social sciences. What matters most is your curiosity, drive, and willingness to learn.",
   },
   {
-    title: "What You’ll Do?",
+    title: "What You’ll Do",
     text: "You’ll join a project team, working on tailored operational or strategic solutions for a real early-stage start-up. You’ll also take part in workshops, providing you with essential training to set you up for a successful consulting project. Finally, you will participate in our in-person events, where you’ll meet other students, present your project work and join us for the afterparty.",
   },
   {
-    title: "Time Commitment?",
+    title: "Time Commitment",
     text: "Expect to spend a maximum of up to 10 hours per week, including project work, workshops, external events and team activities.",
   },
 ];
@@ -88,15 +88,15 @@ export const joinRequirementsIntro =
 
 export const joinRequirements: Highlight[] = [
   {
-    title: "Motivation:",
+    title: "Motivation",
     text: "You are a highly motivated student who is interested in the start-up ecosystem and eager to take ownership and learn.",
   },
   {
-    title: "Student:",
+    title: "Student",
     text: "You are enrolled at a German university or other tertiary education facility.",
   },
   {
-    title: "Contribution:",
+    title: "Contribution",
     text: "You are a team player, ready to commit yourself during the project and stick to deadlines.",
   },
 ];
