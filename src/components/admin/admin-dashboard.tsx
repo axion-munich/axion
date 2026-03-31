@@ -210,7 +210,7 @@ export function AdminDashboard({
         throw new Error(data.error || "Could not save team member.");
       }
 
-      setTeamMembers(data.teamMembers);
+      setTeamMembers(data.teamMembers.filter(m => m.role.toLowerCase() === "board member"));
       resetMemberForm();
       showToast("success", editingMemberId ? "Team member updated." : "Team member added.");
     } catch (error) {
@@ -253,7 +253,7 @@ export function AdminDashboard({
         throw new Error(data.error || "Could not remove team member.");
       }
 
-      setTeamMembers(data.teamMembers);
+      setTeamMembers(data.teamMembers.filter(m => m.role.toLowerCase() === "board member"));
       if (editingMemberId === id) {
         resetMemberForm();
       }
