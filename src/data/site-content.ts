@@ -141,7 +141,7 @@ export const startupFaqs: FaqItem[] = [
     question:
       "What does the project journey with us look like, and how much of your time will it take?",
     answer:
-      "Our projects kick off on May 18, 2026 after we onboard and train our new members through workshops led by experienced consultants from top-tier consulting firms and internal mentors. Over eight weeks, your dedicated team will work on tailored solutions for your startup, with final results delivered by mid July. To stay aligned, we schedule brief weekly check-ins, requiring about one to two hours of your time each week for feedback and discussions.",
+      "Our projects kick off on May 18, 2026 after we onboard and train our new members through workshops led by experienced consultants from top-tier consulting firms and internal mentors. Over eight weeks, our dedicated team will work on tailored solutions for your startup, with final results delivered by mid July. To stay aligned, we schedule brief weekly check-ins, requiring about one to two hours of your time each week for feedback and discussions.",
   },
   {
     question: "What are the costs of working with us, and how significant are they for a start-up?",
