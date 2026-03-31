@@ -164,8 +164,8 @@ export const startupFaqs: FaqItem[] = [
 
 export const contact = {
   email: "contact@axion-munich.de",
-  phone: "",
-  line: "Email: contact@axion-munich.de",
+  phone: "+49 17 662 973 685",
+  line: "Email: contact@axion-munich.de Phone number: +49 17 662 973 685",
   instagram:
     "https://www.instagram.com/axion.munich?igsh=MXNyaWo3bjIwNnMzaA%3D%3D&utm_source=qr",
   linkedin: "https://www.linkedin.com/company/axion-munich",
