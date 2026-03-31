@@ -27,7 +27,6 @@ axion is a student consulting initiative based in Munich, Germany. We connect mo
 
 - Website: https://axion-munich.de
 - Email: contact@axion-munich.de
-- Phone: +49 17 662 973 685
 - Instagram: https://www.instagram.com/axion.munich
 - LinkedIn: https://www.linkedin.com/company/axion-munich
 
