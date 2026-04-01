@@ -12,6 +12,7 @@ import Link from "next/link";
 
 import { AnnouncementBanner } from "@/components/announcement-banner";
 import { MobileNav } from "@/components/mobile-nav";
+import { WaitlistForm } from "@/components/waitlist-form";
 import { StudentTabs } from "@/components/student-tabs";
 import { TeamGrid } from "@/components/team-grid";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -178,6 +179,8 @@ export default async function Home() {
                 {cms.teamStats.nationalityCount} Nationalities
               </span>
             </div>
+
+            {!applicationsOpen && <WaitlistForm />}
           </div>
         </section>
 
