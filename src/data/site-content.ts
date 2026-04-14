@@ -22,6 +22,15 @@ export type FaqItem = {
   answer: string;
 };
 
+export type StartupTestimonial = {
+  quote: string;
+  founder: string;
+  title: string;
+  company: string;
+  logo: string;
+  logoAlt: string;
+};
+
 export const navLinks: NavLink[] = [
   { id: "about", label: "Mission" },
   { id: "students", label: "Students" },
@@ -112,6 +121,27 @@ export const applicationStatus = {
   ctaLabel: "Contact us",
   ctaHref: "#contacts",
 };
+
+export const startupTestimonials: StartupTestimonial[] = [
+  {
+    quote:
+      "Axion's market analysis and KPI framework gave us a much stronger story for investors and a real edge in our funding round.",
+    founder: "Arsenii Bohomol",
+    title: "Founder of Baton Gourmet S.L.",
+    company: "Baton",
+    logo: "/startup-logos/baton.png",
+    logoAlt: "Baton logo",
+  },
+  {
+    quote:
+      "Axion helped us automate our processes and build an AI-powered go-to-market strategy ready for scale.",
+    founder: "Ralf Breitenfeldt",
+    title: "Founder of HCM4ALL",
+    company: "HCM4ALL",
+    logo: "/startup-logos/hcm4all.jpg",
+    logoAlt: "HCM4ALL logo",
+  },
+];
 
 export const studentFaqs: FaqItem[] = [
   {

@@ -8,6 +8,7 @@ import {
   Users,
   Globe,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { AnnouncementBanner } from "@/components/announcement-banner";
@@ -35,6 +36,7 @@ import {
   navLinks,
   startupFaqs,
   startupSupportText,
+  startupTestimonials,
   studentFaqs,
   studentHighlights,
   studentsIntro,
@@ -226,6 +228,53 @@ export default async function Home() {
             title="For Start-Ups"
             description={startupSupportText}
           />
+
+          <div className="space-y-4">
+            <div className="space-y-2 text-center">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                Founder feedback
+              </p>
+              <p className="mx-auto max-w-2xl text-sm leading-7 text-muted-foreground">
+                Proof from teams we already supported.
+              </p>
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              {startupTestimonials.map((testimonial) => (
+                <Card
+                  key={testimonial.founder}
+                  className="border-[#8ba0ff]/20 bg-card/80 shadow-none dark:bg-[#0c1020]/70"
+                >
+                  <CardContent className="flex h-full flex-col gap-4 p-4 sm:p-5">
+                    <p className="text-balance text-base leading-7 text-foreground md:text-[1.05rem] md:leading-7">
+                      {testimonial.quote}
+                    </p>
+
+                    <div className="flex items-center gap-3">
+                      <div className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/90 p-1 shadow-[0_12px_30px_-26px_rgba(15,23,42,0.8)] sm:size-16">
+                        <Image
+                          src={testimonial.logo}
+                          alt={testimonial.logoAlt}
+                          width={64}
+                          height={64}
+                          className="h-full w-full rounded-full object-cover"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <p className="axion-title text-lg leading-tight text-foreground">
+                          {testimonial.founder}
+                        </p>
+                        <p className="text-xs leading-5 text-muted-foreground sm:text-sm">
+                          {testimonial.title}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
 
           <Card
             id="application"
