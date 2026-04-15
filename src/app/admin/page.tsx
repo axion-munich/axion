@@ -42,7 +42,7 @@ export default async function AdminPage() {
           <AdminDashboard
             initialApplicationsOpen={cms.applicationsOpen}
             initialBanners={cms.banners}
-            initialTeamMembers={cms.teamMembers.filter(m => m.role.toLowerCase() === "board member")}
+            initialTeamMembers={cms.teamMembers.filter(m => m.visible)}
           />
         ) : (
           <AdminLoginForm />

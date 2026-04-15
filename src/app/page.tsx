@@ -363,7 +363,7 @@ export default async function Home() {
 
         {/* ─── Team ─── */}
         <section id="team" className="axion-section axion-container">
-          <TeamGrid members={cms.teamMembers.filter(m => m.role.toLowerCase() === "board member")} />
+          <TeamGrid members={cms.teamMembers.filter(m => m.visible)} />
         </section>
 
         {/* ─── Contact ─── */}

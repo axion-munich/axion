@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+*.qrdeps
+*.swift-module-cache
+*scripts

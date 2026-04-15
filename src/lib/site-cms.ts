@@ -5,6 +5,7 @@ export type EditableTeamMember = {
   name: string;
   role: string;
   image: string;
+  visible: boolean;
 };
 
 export type TeamStats = {
@@ -146,13 +147,13 @@ async function setSettingsValue(
   }
 }
 
-// Columns: A=Timestamp, B=First Name, C=Surname, D=Email, E=Phone, F=University, G=Nationality, H=Role, I=Image
+// Columns: A=Timestamp, B=First Name, C=Surname, D=Email, E=Phone, F=University, G=Nationality, H=Role, I=Image, J=Visible
 type TeamSheetRow = string[];
 
 async function readTeamRawRows(sheets: Sheets, spreadsheetId: string): Promise<TeamSheetRow[]> {
   const result = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: "'Form responses 1'!A:I",
+    range: "'Form responses 1'!A:J",
   });
 
   const rows = result.data.values || [];
@@ -169,6 +170,7 @@ function mapRowsToMembers(rows: TeamSheetRow[]): EditableTeamMember[] {
     name: [row[1] || "", row[2] || ""].filter(Boolean).join(" "),
     role: row[7] || "",
     image: row[8] || "",
+    visible: (row[9] || "").trim().toLowerCase() === "yes",
   }));
 }
 
@@ -281,7 +283,7 @@ export async function addTeamMember(input: AddTeamMemberInput) {
   // Ensure header row exists
   const existing = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: "'Form responses 1'!A1:I1",
+    range: "'Form responses 1'!A1:J1",
   });
 
   if (!existing.data.values?.length) {
@@ -301,6 +303,7 @@ export async function addTeamMember(input: AddTeamMemberInput) {
             "Nationality",
             "Role",
             "Image",
+            "Visible",
           ],
         ],
       },
@@ -312,7 +315,7 @@ export async function addTeamMember(input: AddTeamMemberInput) {
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: "'Form responses 1'!A:I",
+    range: "'Form responses 1'!A:J",
     valueInputOption: "RAW",
     insertDataOption: "INSERT_ROWS",
     requestBody: {
@@ -327,6 +330,7 @@ export async function addTeamMember(input: AddTeamMemberInput) {
           "", // Nationality
           input.role.trim(),
           input.image.trim(),
+          "Yes", // Visible
         ],
       ],
     },
@@ -366,7 +370,7 @@ export async function removeTeamMember(memberId: string) {
   // Verify the row exists by reading it
   const result = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `'Form responses 1'!A${sheetRowNumber}:I${sheetRowNumber}`,
+    range: `'Form responses 1'!A${sheetRowNumber}:J${sheetRowNumber}`,
   });
 
   if (!result.data.values?.length || !result.data.values[0][1]) {
@@ -427,7 +431,7 @@ export async function updateTeamMember(input: UpdateTeamMemberInput) {
   // Read existing row to preserve other columns
   const result = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `'Form responses 1'!A${sheetRowNumber}:I${sheetRowNumber}`,
+    range: `'Form responses 1'!A${sheetRowNumber}:J${sheetRowNumber}`,
   });
 
   const existingRow = result.data.values?.[0];
@@ -450,11 +454,12 @@ export async function updateTeamMember(input: UpdateTeamMemberInput) {
     existingRow[6] || "", // Nationality
     input.role.trim(),
     image,
+    existingRow[9] || "No", // Visible — preserve existing value
   ];
 
   await sheets.spreadsheets.values.update({
     spreadsheetId,
-    range: `'Form responses 1'!A${sheetRowNumber}:I${sheetRowNumber}`,
+    range: `'Form responses 1'!A${sheetRowNumber}:J${sheetRowNumber}`,
     valueInputOption: "RAW",
     requestBody: {
       values: [updatedRow],
