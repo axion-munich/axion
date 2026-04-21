@@ -3,6 +3,8 @@ import { Readable } from "node:stream";
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 
+import { buildApplicationConfirmationEmail } from "@/lib/email-template";
+import { sendEmail } from "@/lib/send-email";
 import { getSiteCms } from "@/lib/site-cms";
 
 export const runtime = "nodejs";
@@ -384,6 +386,16 @@ export async function POST(request: Request) {
         context,
       });
     }
+
+    // Send confirmation email (non-blocking — don't fail the submission if email fails)
+    const confirmation = buildApplicationConfirmationEmail(values.fullName);
+    sendEmail({
+      to: values.email,
+      subject: confirmation.subject,
+      html: confirmation.html,
+    }).catch((err) => {
+      console.error("[apply] Confirmation email failed:", err);
+    });
 
     return NextResponse.json({
       ok: true,
