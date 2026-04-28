@@ -16,6 +16,7 @@ import { MobileNav } from "@/components/mobile-nav";
 import { WaitlistForm } from "@/components/waitlist-form";
 import { StudentTabs } from "@/components/student-tabs";
 import { TeamGrid } from "@/components/team-grid";
+import { Timeline } from "@/components/timeline";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
   Accordion,
@@ -40,6 +41,8 @@ import {
   studentFaqs,
   studentHighlights,
   studentsIntro,
+  timelineHeading,
+  timelineSteps,
   tracks,
   whyUsLabel,
 } from "@/data/site-content";
@@ -214,6 +217,16 @@ export default async function Home() {
             joinRequirementsIntro={joinRequirementsIntro}
             applicationsOpen={applicationsOpen}
           />
+        </section>
+
+        {/* Subtle divider */}
+        <div className="axion-container">
+          <div className="h-px bg-border/60" />
+        </div>
+
+        {/* ─── Timeline ─── */}
+        <section className="axion-section axion-container">
+          <Timeline heading={timelineHeading} steps={timelineSteps} />
         </section>
 
         {/* Subtle divider */}

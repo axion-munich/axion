@@ -110,6 +110,55 @@ export const joinRequirements: Highlight[] = [
   },
 ];
 
+export type TimelineStep = {
+  number: number;
+  title: string;
+  items: string[];
+};
+
+export const timelineHeading = "Your full semester at axion, step by step";
+
+export const timelineSteps: TimelineStep[] = [
+  {
+    number: 1,
+    title: "Application",
+    items: [
+      "Get to know axion through our website and LinkedIn",
+      "Submit a short online application: 2 questions + CV",
+      "Chosen candidates are invited to interviews",
+      "The strongest fits join the axion team",
+    ],
+  },
+  {
+    number: 2,
+    title: "Onboarding",
+    items: [
+      "One full day in mid-May to set you up",
+      "IT onboarding to our internal tools and platforms",
+      "Workshops on market research, slide design, Excel, and presenting, led by our mentors from top consulting firms and VCs",
+      "Networking evening with mentors and partner firms",
+    ],
+  },
+  {
+    number: 3,
+    title: "Project Work",
+    items: [
+      "First client call the week after onboarding",
+      "A live client project running from mid-May to mid-July",
+      "Real ownership from day one to sharpen your leadership",
+    ],
+  },
+  {
+    number: 4,
+    title: "Events",
+    items: [
+      "Regular mentor workshops and recruiting events with our partners",
+      "Midterm presentation in mid-June to track project progress",
+      "Final presentation in mid-July, live in front of your client",
+    ],
+  },
+];
+
 export const startupSupportText =
   "axion is a Munich-based, student-driven consulting club where students from Germany’s top universities tackle real start-up challenges. We provide tailored support in strategy and operational consulting, focusing on areas such as market entry, organizational development, financial management, and fundraising preparation. Our interdisciplinary teams of students leverage diverse academic backgrounds to deliver actionable solutions for client start-ups. Beyond consulting, we serve as a bridge to Europe’s venture capital ecosystem. We prepare start-ups for fundraising and connect them with leading VCs, business angels, and innovation networks.";
 
