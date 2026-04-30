@@ -336,7 +336,9 @@ export async function POST(request: Request) {
       program: "",
       motivation: "",
       businessIdea: "",
-      leadership: "",
+      // Placeholder so the Apps Script's required-field validation still passes
+      // and the Google Sheet's Leadership column stays aligned for legacy rows.
+      leadership: "—",
     };
 
     for (const field of REQUIRED_TEXT_FIELDS) {
