@@ -3,23 +3,16 @@
 import { CheckCircle2 } from "lucide-react";
 
 import type { Highlight, Track } from "@/data/site-content";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type StudentTabsProps = {
   highlights: Highlight[];
   tracks: Track[];
-  joinRequirements: Highlight[];
-  joinRequirementsIntro: string;
-  applicationsOpen: boolean;
 };
 
 export function StudentTabs({
   highlights,
   tracks,
-  joinRequirements,
-  joinRequirementsIntro,
-  applicationsOpen,
 }: StudentTabsProps) {
   return (
     <div className="space-y-10">
@@ -82,33 +75,6 @@ export function StudentTabs({
         </Tabs>
       </div>
 
-      <div className="space-y-4 text-center">
-        <p className="mx-auto max-w-2xl text-sm leading-7 text-muted-foreground">{joinRequirementsIntro}</p>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {joinRequirements.map((req) => (
-            <div
-              key={req.title}
-              className="rounded-xl border border-border bg-card/50 p-4 text-left dark:bg-[#0c1020]/40"
-            >
-              <p className="text-sm font-semibold text-foreground">{req.title}</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{req.text}</p>
-            </div>
-          ))}
-        </div>
-        {applicationsOpen ? (
-          <Button
-            asChild
-            size="lg"
-            className="rounded-full bg-primary px-10 py-6 text-lg font-semibold text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90"
-          >
-            <a href="/apply">Apply now</a>
-          </Button>
-        ) : (
-          <Button disabled size="lg" className="rounded-full bg-muted px-10 py-6 text-lg font-semibold text-muted-foreground">
-            Applications closed
-          </Button>
-        )}
-      </div>
     </div>
   );
 }

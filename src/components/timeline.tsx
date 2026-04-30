@@ -108,7 +108,7 @@ export function Timeline({ heading, steps }: TimelineProps) {
                     {step.items.map((item, j) => (
                       <li
                         key={j}
-                        className="flex items-start gap-2.5 text-sm leading-relaxed text-muted-foreground"
+                        className="flex items-start gap-2.5 whitespace-pre-line text-sm leading-relaxed text-muted-foreground"
                       >
                         <span
                           className={`mt-2 block size-1.5 shrink-0 rounded-full transition-colors duration-500 ${

@@ -135,7 +135,7 @@ export const timelineSteps: TimelineStep[] = [
     items: [
       "One full day in mid-May to set you up",
       "IT onboarding to our internal tools and platforms",
-      "Workshops on market research, slide design, Excel, and presenting, led by our mentors from top consulting firms and VCs",
+      "Workshops on market research, slide design, Excel, and presenting,\nled by our mentors from top consulting firms and VCs",
       "Networking evening with mentors and partner firms",
     ],
   },

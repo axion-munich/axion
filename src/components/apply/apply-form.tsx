@@ -20,7 +20,6 @@ type FormValues = {
   university: string;
   program: string;
   motivation: string;
-  leadership: string;
   businessIdea: string;
 };
 
@@ -30,7 +29,6 @@ const STEP_TITLES = [
   "Personal information",
   "Question 1",
   "Question 2",
-  "Question 3",
   "CV upload",
 ] as const;
 
@@ -40,7 +38,6 @@ const INITIAL_VALUES: FormValues = {
   university: "",
   program: "",
   motivation: "",
-  leadership: "",
   businessIdea: "",
 };
 
@@ -73,15 +70,11 @@ export function ApplyForm() {
       return "Please answer question 1 before continuing.";
     }
 
-    if (currentStep === 2 && !values.leadership.trim()) {
+    if (currentStep === 2 && !values.businessIdea.trim()) {
       return "Please answer question 2 before continuing.";
     }
 
-    if (currentStep === 3 && !values.businessIdea.trim()) {
-      return "Please answer question 3 before continuing.";
-    }
-
-    if (currentStep === 4) {
+    if (currentStep === 3) {
       if (!cvFile) {
         return "Please upload your CV before submitting.";
       }
@@ -133,7 +126,6 @@ export function ApplyForm() {
     payload.append("university", values.university.trim());
     payload.append("program", values.program.trim());
     payload.append("motivation", values.motivation.trim());
-    payload.append("leadership", values.leadership.trim());
     payload.append("businessIdea", values.businessIdea.trim());
     payload.append("cv", cvFile);
 
@@ -327,7 +319,7 @@ export function ApplyForm() {
                 {step === 1 ? (
                   <div className="grid gap-3">
                     <p className="text-sm font-medium text-foreground">
-                      What interests you most about start-up consulting and why do you want to join axion?
+                      What excites you about consulting for early-stage start-ups, and what makes axion the right fit for you?
                     </p>
                     <textarea
                       name="motivation"
@@ -343,22 +335,6 @@ export function ApplyForm() {
                 {step === 2 ? (
                   <div className="grid gap-3">
                     <p className="text-sm font-medium text-foreground">
-                      Describe a time when you took on a leadership role or worked collaboratively in a team. What did you learn from that experience?
-                    </p>
-                    <textarea
-                      name="leadership"
-                      rows={8}
-                      value={values.leadership}
-                      onChange={(event) => updateField("leadership", event.target.value)}
-                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none transition focus:ring-2 focus:ring-primary/35"
-                      placeholder="Write your answer here"
-                    />
-                  </div>
-                ) : null}
-
-                {step === 3 ? (
-                  <div className="grid gap-3">
-                    <p className="text-sm font-medium text-foreground">
                       If you could start your own business or initiative, what would it be and why?
                     </p>
                     <textarea
@@ -372,7 +348,7 @@ export function ApplyForm() {
                   </div>
                 ) : null}
 
-                {step === 4 ? (
+                {step === 3 ? (
                   <div className="grid gap-3">
                     <p className="text-sm font-medium text-foreground">
                       Upload your CV (PDF, DOC, DOCX, max 5MB)

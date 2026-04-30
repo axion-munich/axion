@@ -15,7 +15,6 @@ const REQUIRED_TEXT_FIELDS = [
   "university",
   "program",
   "motivation",
-  "leadership",
   "businessIdea",
 ] as const;
 
@@ -23,7 +22,10 @@ const MAX_CV_SIZE_BYTES = 5 * 1024 * 1024;
 
 type RequiredField = (typeof REQUIRED_TEXT_FIELDS)[number];
 
-type SubmissionValues = Record<RequiredField, string>;
+// `leadership` is no longer collected from the form, but the Google Sheet still
+// has a Leadership column. Keep the field in the payload as an empty string so
+// existing rows stay aligned and downstream Apps Script handlers don't break.
+type SubmissionValues = Record<RequiredField, string> & { leadership: string };
 
 type SubmissionContext = {
   sent: string;
@@ -333,8 +335,8 @@ export async function POST(request: Request) {
       university: "",
       program: "",
       motivation: "",
-      leadership: "",
       businessIdea: "",
+      leadership: "",
     };
 
     for (const field of REQUIRED_TEXT_FIELDS) {
