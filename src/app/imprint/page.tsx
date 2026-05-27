@@ -30,18 +30,7 @@ export default function ImprintPage() {
         <p className="text-sm leading-7 text-muted-foreground md:text-base">
           axion Munich
           <br />
-          Student Initiative at the Technical University of Munich
-        </p>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-lg font-semibold text-foreground">Address</h2>
-        <p className="text-sm leading-7 text-muted-foreground md:text-base">
-          Arcisstra&szlig;e 21
-          <br />
-          80333 Munich
-          <br />
-          Germany
+          Student Initiative
         </p>
       </section>
 
@@ -66,12 +55,6 @@ export default function ImprintPage() {
         </h2>
         <p className="text-sm leading-7 text-muted-foreground md:text-base">
           Fedor Olshevskiy
-          <br />
-          Arcisstra&szlig;e 21
-          <br />
-          80333 Munich
-          <br />
-          Germany
         </p>
       </section>
 

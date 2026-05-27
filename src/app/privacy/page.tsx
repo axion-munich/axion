@@ -38,8 +38,6 @@ export default function PrivacyPage() {
         <p className="text-sm leading-7 text-muted-foreground md:text-base">
           axion Munich
           <br />
-          Arcisstra&szlig;e 21, 80333 Munich, Germany
-          <br />
           Email:{" "}
           <a href="mailto:contact@axion-munich.de" className="text-primary hover:underline">
             contact@axion-munich.de
