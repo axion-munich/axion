@@ -225,7 +225,7 @@ export const startupFaqs: FaqItem[] = [
   {
     question: "What are the costs of working with us, and how significant are they for a start-up?",
     answer:
-      "We charge a small project fee well below €1000, which is considerably lower than the rates of most student consultancies and professional consultancies. Our focus is on making high-quality consulting accessible to early-stage startups rather than generating profit.",
+      "As a non-profit organisation, we charge a small project fee that depends on the scope, timeline and the team staffed on your project - considerably lower than the rates of most student consultancies and professional consultancies. Our focus is on making high-quality consulting accessible to early-stage startups rather than generating profit.",
   },
   {
     question: "What sets us apart from traditional student consultancies?",
