@@ -176,7 +176,12 @@ export default async function Home() {
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-2">
                 <Users className="size-4 text-[#9fb1ff]" />
-                {cms.teamStats.memberCount} Members
+                30+ Members
+              </span>
+              <span className="hidden h-4 w-px bg-border sm:block" />
+              <span className="flex items-center gap-2">
+                <Sparkles className="size-4 text-[#9fb1ff]" />
+                10+ Projects
               </span>
               <span className="hidden h-4 w-px bg-border sm:block" />
               <span className="flex items-center gap-2">
